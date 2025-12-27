@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azota - REVIEW THE FIRST TERM - 10 BRIGHT - HK1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background: #f5f7fa; margin: 0; padding: 20px; color: #333; }
+        .header { text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .header h1 { margin: 0; font-size: 28px; font-weight: 700; }
+        .header p { margin: 10px 0 0; font-size: 18px; opacity: 0.9; }
+        .part-title { font-size: 22px; font-weight: 700; color: #667eea; margin: 40px 0 20px 0; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+        .note { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; border-radius: 8px; margin-bottom: 30px; font-size: 15px; }
+        .question-container { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: all 0.3s; }
+        .question-container:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+        .question-number { display: inline-block; background: #667eea; color: white; width: 32px; height: 32px; line-height: 32px; text-align: center; border-radius: 50%; font-weight: 700; margin-right: 12px; font-size: 15px; }
+        .question-text { display: inline-block; vertical-align: middle; width: calc(100% - 50px); font-size: 16px; line-height: 1.6; }
+        u { color: #d32f2f; font-weight: bold; }
+        .options { margin-top: 15px; padding-left: 10px; }
+        .option { margin-bottom: 12px; }
+        .option label { display: flex; align-items: center; font-size: 16px; cursor: pointer; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
+        .option label:hover { background: #f0f4ff; }
+        .option input[type="radio"] { margin-right: 12px; transform: scale(1.2); }
+        .fill-input { width: 100%; max-width: 500px; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; margin-top: 15px; }
+        .fill-input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+        #submitBtn { display: block; margin: 40px auto; padding: 14px 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
+        #submitBtn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(102,126,234,0.5); }
+        #retryBtn { display: block; margin: 20px auto; padding: 12px 30px; background: #4caf50; color: white; border: none; border-radius: 50px; font-size: 16px; font-weight: 500; cursor: pointer; }
+        .result { background: white; border-radius: 12px; padding: 25px; margin-top: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: none; }
+        .score-section { display: flex; justify-content: center; gap: 40px; margin: 20px 0; flex-wrap: wrap; }
+        .score-box { background: #667eea; color: white; padding: 20px; border-radius: 12px; text-align: center; min-width: 200px; }
+        .score-box h3 { margin: 0 0 10px 0; font-size: 18px; }
+        .score-box p { margin: 0; font-size: 28px; font-weight: 700; }
+        .answer-item { padding: 12px 0; border-bottom: 1px solid #eee; }
+        .answer-item:last-child { border-bottom: none; }
+        .correct { color: #4caf50; font-weight: 700; }
+        .incorrect { color: #f44336; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>REVIEW THE FIRST TERM - 10 BRIGHT - HK1</h1>
+        <p>Bài ôn tập học kỳ 1 - Tiếng Anh lớp 10</p>
+    </div>
+
+    <div class="note">
+        <strong>Lưu ý:</strong><br>
+        - Phần phát âm: Các phần được <u>gạch chân đỏ</u> là phần cần chú ý phát âm khác biệt.<br>
+        - Phần điền từ không phân biệt chữ hoa/thường, bỏ qua khoảng trắng thừa.<br>
+        - Mỗi lần reload hoặc "Làm lại", chỉ random câu hỏi bên trong từng phần, không trộn lẫn giữa các phần.
+    </div>
+
+    <form id="examForm"></form>
+
+    <button id="submitBtn" type="button" onclick="submitExam()">NỘP BÀI</button>
+
+    <div class="result" id="result">
+        <div class="score-section">
+            <div class="score-box"><h3>Điểm số</h3><p id="totalScoreDisplay">0/0</p></div>
+        </div>
+        <div id="answers"></div>
+        <button id="retryBtn" onclick="retryExam()">LÀM LẠI</button>
+    </div>
+
+    <script>
+        // Các phần riêng biệt, đúng theo file gốc
+        const parts = {
+            pronunciation: [
+                { type: 'mcq', text: 'Exercise 1: Mark the letter A, B, C or D to indicate the word whose <u>underlined</u> part differs from the other three in pronunciation.', options: ['A. chara<u>c</u>teristic', 'B. Ch<u>r</u>istmas', 'C. ch<u>a</u>llenge', 'D. ch<u>e</u>mical'], answer: 'B' },
+                { type: 'mcq', text: '2.', options: ['A. m<u>u</u>seum', 'B. disapp<u>oi</u>nted', 'C. m<u>u</u>sical', 'D. am<u>u</u>sing'], answer: 'B' },
+                { type: 'mcq', text: '3.', options: ['A. p<u>a</u>intings', 'B. <u>e</u>vents', 'C. rem<u>a</u>rks', 'D. photogr<u>a</u>phs'], answer: 'B' },
+                { type: 'mcq', text: '4.', options: ['A. g<u>a</u>me', 'B. g<u>oo</u>ds', 'C. g<u>i</u>ft', 'D. g<u>y</u>m'], answer: 'B' },
+                { type: 'mcq', text: '5.', options: ['A. bl<u>oo</u>d', 'B. aftern<u>oo</u>n', 'C. f<u>oo</u>d', 'D. m<u>oo</u>n'], answer: 'A' },
+                { type: 'mcq', text: '6.', options: ['A. m<u>a</u>n', 'B. m<u>a</u>ny', 'C. c<u>a</u>t', 'D. marath<u>o</u>n'], answer: 'B' },
+                { type: 'mcq', text: '7.', options: ['A. ch<u>a</u>rity', 'B. <u>a</u>ccess', 'C. b<u>a</u>ttle', 'D. don<u>a</u>te'], answer: 'B' },
+                { type: 'mcq', text: '8.', options: ['A. c<u>o</u>ncern', 'B. c<u>o</u>llect', 'C. <u>a</u>ccess', 'D. pr<u>o</u>tect'], answer: 'C' },
+                { type: 'mcq', text: '9.', options: ['A. n<u>u</u>rse', 'B. s<u>u</u>cceed', 'C. c<u>u</u>rtain', 'D. s<u>u</u>rgeon'], answer: 'B' },
+                { type: 'mcq', text: '10.', options: ['A. p<u>o</u>lice', 'B. c<u>o</u>mputer', 'C. c<u>o</u>mplete', 'D. m<u>o</u>del'], answer: 'A' },
+                { type: 'mcq', text: '11.', options: ['A. symb<u>o</u>ls', 'B. b<u>a</u>nks', 'C. st<u>e</u>ps', 'D. t<u>ou</u>rist'], answer: 'D' },
+                { type: 'mcq', text: '12.', options: ['A. work<u>ed</u>', 'B. stopp<u>ed</u>', 'C. forc<u>ed</u>', 'D. want<u>ed</u>'], answer: 'D' }
+            ],
+            stress: [
+                { type: 'mcq', text: 'Choose the word whose stress pattern is different from that of the others.', options: ['A. deny', 'B. remote', 'C. income', 'D. unique'], answer: 'A' },
+                { type: 'mcq', text: '2.', options: ['A. nature', 'B. subject', 'C. scenery', 'D. tuition'], answer: 'D' },
+                { type: 'mcq', text: '3.', options: ['A. admire', 'B. Internet', 'C. violent', 'D. website'], answer: 'A' },
+                { type: 'mcq', text: '4.', options: ['A. politics', 'B. literature', 'C. chemistry', 'D. statistics'], answer: 'D' },
+                { type: 'mcq', text: '5.', options: ['A. likeable', 'B. oxygen', 'C. museum', 'D. energy'], answer: 'A' },
+                { type: 'mcq', text: '6.', options: ['A. professor', 'B. accountant', 'C. typical', 'D. develop'], answer: 'C' },
+                { type: 'mcq', text: '7.', options: ['A. furniture', 'B. usually', 'C. lemonade', 'D. grandparents'], answer: 'A' },
+                { type: 'mcq', text: '8.', options: ['A. orchestra', 'B. opera', 'C. tragedy', 'D. tradition'], answer: 'D' },
+                { type: 'mcq', text: '9.', options: ['A. entertain', 'B. cinema', 'C. furniture', 'D. holiday'], answer: 'A' },
+                { type: 'mcq', text: '10.', options: ['A. provide', 'B. treatment', 'C. improve', 'D. support'], answer: 'B' }
+            ],
+            exercise3_fill: [
+                { type: 'fill', text: 'Exercise 3: Mark the letter A, B, C or D to indicate the correct answer to each of the following questions.', answer: '' }, // Tiêu đề
+                { type: 'fill', text: '1. You call a plumber if you need someone to ______________ a burst pipe.', answer: 'fix' },
+                { type: 'fill', text: '2. I’m looking for a ______________ job. I don’t mind what it is, but I’m only free on Saturdays and Sundays.', answer: 'part-time' },
+                { type: 'fill', text: '3. Student A: “Do you want to come ice skating with us tomorrow?”<br>Student B: “I can’t. I ______________ a lecture about gender equality at 9 o’clock.”', answer: 'have' },
+                { type: 'fill', text: '4. “Bill, your mobile phone is ringing. I ______________ it if you want.”', answer: 'will answer' },
+                { type: 'fill', text: '5. Matthew works as a(n) ______________ at a travel agency. He answers the phone, greets clients and arranges meetings.', answer: 'receptionist' },
+                { type: 'fill', text: '6. We didn’t know what was wrong with the car, but the ______________ was able to tell as soon as he turned the key to start the engine.', answer: 'mechanic' },
+                { type: 'fill', text: '7. My son hopes he will become a(n) ______________ when he grows up. He wants to travel into space.', answer: 'astronaut' },
+                { type: 'fill', text: '8. On the ticket it says that my plane ______________ at 22:30 on Friday.', answer: 'departs' },
+                { type: 'fill', text: '9. The classrooms have been ______________ with interactive whiteboards.', answer: 'equipped' },
+                { type: 'fill', text: '10. When you fit in with your colleagues, you can communicate more effectively with your team, which leads to high levels of performance.', answer: 'get along' },
+                { type: 'fill', text: '11. Fashion designers need to be inventive so that they can turn a piece of cloth into fashionable clothing.', answer: 'creative' },
+                { type: 'fill', text: '12. Student A: “I believe women have rights to pursue any jobs that they want.”<br>Student B: “______________. Nowadays, women are getting into male-dominated areas of work.”', answer: 'i agree' },
+                { type: 'fill', text: '13. Student A: “I think being a firefighter is a dangerous but rewarding job.”<br>Student B: “______________. It’s a great job if you enjoy helping people and serving the community.”', answer: 'i agree' },
+                { type: 'fill', text: '14. He resigned from a safe and ______________ job to start his own business.', answer: 'secure' },
+                { type: 'fill', text: '15. We have focused our resources ______________ developing new products.', answer: 'on' },
+                { type: 'fill', text: '16. He\'s never done this type of work before; I\'m not sure how he\'ll ______________ the other people.', answer: 'fit in with' },
+                { type: 'fill', text: '17. I don\'t have enough money. If I ______________ a lot of money, I ______________ a big house in the countryside.', answer: 'had would buy' },
+                { type: 'fill', text: '18. Bill Harrelson, a 69-year-old man, took a ______________ flight around the world in a plane he built himself.', answer: 'solo' },
+                { type: 'fill', text: '19. To my way of thinking, one of the most common challenges of studying abroad is the language ______________.', answer: 'barrier' },
+                { type: 'fill', text: '20. This is the second time I ______________ clam chowder. It is an acquired taste.', answer: 'have tried' },
+                { type: 'fill', text: '21. Anyone living in this area can seek care for any health problem at the local health ______________.', answer: 'clinic' },
+                { type: 'fill', text: '22. The hospital is trying to ______________ funds for a new X-ray machine.', answer: 'raise' },
+                { type: 'fill', text: '23. Your age doesn\'t ______________ any difference to whether you get the job or not.', answer: 'make' },
+                { type: 'fill', text: '24. Your guitar playing has improved a lot ______________ I last heard you play.', answer: 'since' },
+                { type: 'fill', text: '25. Although they took little ______________ in the fundraising, they helped out by teaching the children how to read and write.', answer: 'part' },
+                { type: 'fill', text: '26. Men and women should have equal ______________ to education and employment.', answer: 'access' },
+                { type: 'fill', text: '27. We ______________ to Oslo many times so I know this area like the back of my hand.', answer: 'have been' },
+                { type: 'fill', text: '28. UNICEF has spent 70 years working to ______________ the lives of disadvantaged children and their families.', answer: 'improve' },
+                { type: 'fill', text: '29. Neil is not here. He ______________ to the supermarket.', answer: 'has gone' },
+                { type: 'fill', text: '30. Mrs. Parker has collected used books for children in need ______________ the end of last month.', answer: 'since' },
+                { type: 'fill', text: '31. This is the second time our school ______________ a charity concert.', answer: 'has organized' },
+                { type: 'fill', text: '32. You can __________ money to the charity in cash or by cheque.', answer: 'donate' },
+                { type: 'fill', text: '33. More than one hundred people have signed up for the clean-up day __________.', answer: 'so far' },
+                { type: 'fill', text: '34. I __________ to Amsterdam once. It was an unforgettable trip.', answer: 'have been' },
+                { type: 'fill', text: '35. FAO has helped billions of people around the world to have access __________ nutritious food since 1945.', answer: 'to' },
+                { type: 'fill', text: '36. Do you fancy ______________ at a charity kitchen? We can help to provide free meals for the poor.', answer: 'volunteering' },
+                { type: 'fill', text: '39. Student A: “Do you want to go on a nature hike?”<br>Student B: “______________”', answer: 'yes id love to' },
+                { type: 'fill', text: '40. Student A: “Would you like to go to the second-hand book sale with me?”<br>Student B: “______________”', answer: 'sure' },
+                { type: 'fill', text: '41. Student A: “Let’s collect supplies like mineral water, canned food or clothes to help flood victims.”<br>Student B: “______________”', answer: 'great idea' },
+                { type: 'fill', text: '42. Sometimes, it’s difficult to ______________ with your colleagues.', answer: 'get along' },
+                { type: 'fill', text: '43. My sister is a mechanic. She’s responsible ______________ checking the cars for problems.', answer: 'for' },
+                { type: 'fill', text: '44. Ms. Jennifer ______________ in the catering industry for several years.', answer: 'has worked' },
+                { type: 'fill', text: '45. Look at that child! He ______________ the road all alone. Someone needs to stop him!', answer: 'is crossing' },
+                { type: 'fill', text: '46. Student A: “Let’s have a bake sale to raise money for children in the mountainous area.”<br>Student B: “______________”', answer: 'good idea' },
+                { type: 'fill', text: '47. We ______________ to the cinema three times this month. Let’s do something else.', answer: 'have been' }
+            ],
+            exercise3_mcq: [
+                { type: 'mcq', text: '37. Every year we have charity days to _____________ money for unfortunate people.', options: ['A. raise', 'B. borrow', 'C. lend', 'D. save'], answer: 'A' },
+                { type: 'mcq', text: '38. _____________ a lot of free candy and everybody is happy for a while.', options: ['A. Give out', 'B. Give away', 'C. Pick up', 'D. Sign up'], answer: 'A' },
+                { type: 'mcq', text: '48. If that hat costs much, I …………… a small one.', options: ['A. would have bought', 'B. will buy', 'C. bought', 'D. would buy'], answer: 'D' },
+                { type: 'mcq', text: '49. If I spoke English, my job ………………… a lot easier.', options: ['A. was', 'B. were', 'C. will be', 'D. would be'], answer: 'D' },
+                { type: 'mcq', text: '50. I will lend them some money if they ……………. me.', options: ['A. ask', 'B. will ask', 'C. asked', 'D. had asked'], answer: 'A' },
+                { type: 'mcq', text: '51. My dog will bark if it ……………. any strange sound.', options: ['A. hear', 'B. hears', 'C. heard', 'D. had heard'], answer: 'B' },
+                { type: 'mcq', text: '52. If I …………. enough money, I will buy a house.', options: ['A. had', 'B. had had', 'C. will have', 'D. have'], answer: 'D' },
+                { type: 'mcq', text: '53. If you ………….. away, I will send for a policeman.', options: ['A. not go', 'B. don’t go', 'C. hadn’t gone', 'D. didn’t go'], answer: 'B' },
+                { type: 'mcq', text: '54. If I …… in your place, I would accept Mr Anderson’s invitation.', options: ['A. were', 'B. am', 'C. be', 'D. was'], answer: 'A' },
+                { type: 'mcq', text: '55. What ……….. we do if they don’t come tomorrow?', options: ['A. would', 'B. will', 'C. did', 'D. had'], answer: 'B' },
+                { type: 'mcq', text: '56. If I ……………. you, I would tell the truth.', options: ['A. is', 'B. am', 'C. were', 'D. was'], answer: 'C' },
+                { type: 'mcq', text: '57. If I had enough time now, I ……….. to my parents.', options: ['A. would write', 'B. write', 'C. will write', 'D. wrote'], answer: 'A' },
+                { type: 'mcq', text: '58. It’s too bad Helen isn’t here. If she ……….. here, she …….. what to do.', options: ['A. is / will know', 'B. was / knows', 'C. were / would know', 'D. are / would have known'], answer: 'C' },
+                { type: 'mcq', text: '59. If she …………. late again, she will lose her job.', options: ['A. come', 'B. came', 'C. comes', 'D. had come'], answer: 'C' },
+                { type: 'mcq', text: '60. I will let you know if I ……….. out what’s happening.', options: ['A. find', 'B. finds', 'C. found', 'D. had found'], answer: 'A' },
+                { type: 'mcq', text: '61. If we ……………. in a town, life would be better.', options: ['A. live', 'B. lived', 'C. would live', 'D. had lived'], answer: 'B' },
+                { type: 'mcq', text: '62. I’m sure he wouldn’t mind if we …………… early.', options: ['A. arrive', 'B. arriving', 'C. arrived', 'D. had arrived'], answer: 'C' },
+                { type: 'mcq', text: '63. If I won the lottery, I ……. you half the money.', options: ['A. gave', 'B. had given', 'C. will give', 'D. would give'], answer: 'D' },
+                { type: 'mcq', text: '64. It ……….. be a pity if she married Fred.', options: ['A. will', 'B. would', 'C. can', 'D. may'], answer: 'B' },
+                { type: 'mcq', text: '65. If I’m free on Saturday, I ………….. to the mountains.', options: ['A. to go', 'B. could go', 'C. went', 'D. can go'], answer: 'D' },
+                { type: 'mcq', text: '66. We ……………. you if we have time.', options: ['A. will phone', 'B. would phone', 'C. phoned', 'D. had phoned'], answer: 'A' },
+                { type: 'mcq', text: '67. If I …………. you, I would help them.', options: ['A. am', 'B. will be', 'C. were', 'D. had been'], answer: 'C' },
+                { type: 'mcq', text: '68. If we have some eggs, I …………… you a cake.', options: ['A. made', 'B. makes', 'C. will make', 'D. would make'], answer: 'C' },
+                { type: 'mcq', text: '69. Exercise can make a big _____________ to your state of health.', options: ['A. effect', 'B. influence', 'C. difference', 'D. impact'], answer: 'C' },
+                { type: 'mcq', text: '70. I __________ to Amsterdam once. It was an unforgettable trip.', options: ['A. have gone', 'B. have been', 'C. went', 'D. was'], answer: 'B' }
+            ],
+            vocabulary_jobs: [
+                { type: 'mcq', text: 'Mark the letter A, B, C or D on your answer sheet to indicate the correct answer to each of the following questions.', options: [], answer: '' },
+                { type: 'mcq', text: 'A person who looks after patients in a hospital is called a ______________.', options: ['A. scientist', 'B. nurse', 'C. pilot', 'D. architect'], answer: 'B' },
+                { type: 'mcq', text: 'A job that allows you to work fewer hours each week is a ______________ job.', options: ['A. full-time', 'B. permanent', 'C. part-time', 'D. flexible'], answer: 'C' },
+                { type: 'mcq', text: 'A ______________ is someone whose job is to fly an aircraft.', options: ['A. mechanic', 'B. driver', 'C. pilot', 'D. engineer'], answer: 'C' },
+                { type: 'mcq', text: 'A person who studies science and makes new discoveries is a ______________.', options: ['A. politician', 'B. scientist', 'C. programmer', 'D. designer'], answer: 'B' },
+                { type: 'mcq', text: '_____________ writes computer codes and develops software.', options: ['A. journalist', 'B. accountant', 'C. computer programmer', 'D. engineer'], answer: 'C' },
+                { type: 'mcq', text: 'Someone who works in government and makes laws is a ______________.', options: ['A. scientist', 'B. officer', 'C. politician', 'D. manager'], answer: 'C' },
+                { type: 'mcq', text: 'A job that offers long-term stability is called a ______________ job.', options: ['A. temporary', 'B. voluntary', 'C. permanent', 'D. flexible'], answer: 'C' },
+                { type: 'mcq', text: 'A job without payment is known as ______________ work.', options: ['A. full-time', 'B. voluntary', 'C. well-paid', 'D. permanent'], answer: 'B' },
+                { type: 'mcq', text: 'If you are paid a high salary, your job is ______________.', options: ['A. unpaid', 'B. low-paid', 'C. underpaid', 'D. well-paid'], answer: 'D' },
+                { type: 'mcq', text: 'The amount of money you earn for your job is your ______________.', options: ['A. skill', 'B. salary', 'C. duty', 'D. task'], answer: 'B' },
+                { type: 'mcq', text: 'A person who designs buildings is an ______________.', options: ['A. electrician', 'B. architect', 'C. mechanic', 'D. plumber'], answer: 'B' },
+                { type: 'mcq', text: 'A good working ______________ helps employees feel comfortable and productive.', options: ['A. environment', 'B. contract', 'C. duty', 'D. pressure'], answer: 'A' },
+                { type: 'mcq', text: 'The ability to do something well is called a ______________.', options: ['A. wage', 'B. skill', 'C. career', 'D. schedule'], answer: 'B' },
+                { type: 'mcq', text: 'When people work well together, they ______________ with each other.', options: ['A. turn down', 'B. give up', 'C. get along', 'D. take over'], answer: 'C' },
+                { type: 'mcq', text: 'A job interview is a meeting where an employer checks your ______________.', options: ['A. hobbies', 'B. qualifications', 'C. benefits', 'D. pressure'], answer: 'B' },
+                { type: 'mcq', text: 'The knowledge and skills gained from working are called work ______________.', options: ['A. experience', 'B. balance', 'C. pressure', 'D. schedule'], answer: 'A' },
+                { type: 'mcq', text: 'A job that is difficult but satisfying is considered ______________.', options: ['A. boring', 'B. exhausting', 'C. rewarding', 'D. stressful'], answer: 'C' },
+                { type: 'mcq', text: 'The official agreement between an employee and employer is a ______________.', options: ['A. contract', 'B. duty', 'C. benefit', 'D. task'], answer: 'A' },
+                { type: 'mcq', text: 'Something that makes communication difficult is a language ______________.', options: ['A. gap', 'B. barrier', 'C. fence', 'D. wall'], answer: 'B' },
+                { type: 'mcq', text: 'The quality of being able to depend on someone is called ______________.', options: ['A. patience', 'B. reliability', 'C. pressure', 'D. confidence'], answer: 'B' },
+                { type: 'mcq', text: 'A job that allows you to choose your working hours is ______________.', options: ['A. permanent', 'B. flexible', 'C. full-time', 'D. voluntary'], answer: 'B' },
+                { type: 'mcq', text: 'If someone leaves their job officially, they ______________.', options: ['A. apply', 'B. resign', 'C. promote', 'D. employ'], answer: 'B' },
+                { type: 'mcq', text: 'The ability to create new ideas is called ______________.', options: ['A. creativity', 'B. pressure', 'C. confidence', 'D. patience'], answer: 'A' },
+                { type: 'mcq', text: 'A place where people receive medical treatment is a ______________.', options: ['A. factory', 'B. office', 'C. hospital', 'D. laboratory'], answer: 'C' },
+                { type: 'mcq', text: 'A person who repairs machines and engines is a ______________.', options: ['A. architect', 'B. mechanic', 'C. electrician', 'D. scientist'], answer: 'B' },
+                { type: 'mcq', text: 'A job done by choice to help others is called ______________ work.', options: ['A. permanent', 'B. flexible', 'C. voluntary', 'D. paid'], answer: 'C' },
+                { type: 'mcq', text: 'When employees work together to achieve a goal, they work as a ______________.', options: ['A. career', 'B. team', 'C. skill', 'D. duty'], answer: 'B' },
+                { type: 'mcq', text: 'A job that requires working from 9 a.m. to 5 p.m. is called a ______________ job.', options: ['A. part-time', 'B. flexible', 'C. nine-to-five', 'D. voluntary'], answer: 'C' },
+                { type: 'mcq', text: 'The chance to move up to a better position at work is called ______________.', options: ['A. pressure', 'B. promotion', 'C. schedule', 'D. salary'], answer: 'B' },
+                { type: 'mcq', text: 'Feeling very tired because of too much work means being ______________.', options: ['A. motivated', 'B. satisfied', 'C. overworked', 'D. relaxed'], answer: 'C' },
+                { type: 'mcq', text: 'A place where people work together is a ______________.', options: ['A. workplace', 'B. deadline', 'C. contract', 'D. duty'], answer: 'A' },
+                { type: 'mcq', text: 'The responsibility you have in a job is your ______________.', options: ['A. salary', 'B. duty', 'C. benefit', 'D. schedule'], answer: 'B' },
+                { type: 'mcq', text: 'Extra advantages provided by a company are called employee ______________.', options: ['A. wages', 'B. skills', 'C. benefits', 'D. duties'], answer: 'C' },
+                { type: 'mcq', text: 'The balance between work and personal life is called work-life ______________.', options: ['A. experience', 'B. balance', 'C. pressure', 'D. duty'], answer: 'B' },
+                { type: 'mcq', text: 'A person who manages and leads a company is a ______________.', options: ['A. employee', 'B. manager', 'C. worker', 'D. assistant'], answer: 'B' },
+                { type: 'mcq', text: 'A job that lasts for a short time is ______________.', options: ['A. permanent', 'B. voluntary', 'C. temporary', 'D. flexible'], answer: 'C' },
+                { type: 'mcq', text: 'The ability to speak and share ideas clearly is called communication ______________.', options: ['A. tasks', 'B. skills', 'C. wages', 'D. shifts'], answer: 'B' },
+                { type: 'mcq', text: 'A person who works for someone else is an ______________.', options: ['A. employer', 'B. employee', 'C. manager', 'D. leader'], answer: 'B' },
+                { type: 'mcq', text: 'Stress at work is often caused by heavy workloads and high ______________.', options: ['A. pressure', 'B. creativity', 'C. confidence', 'D. patience'], answer: 'A' },
+                { type: 'mcq', text: 'Equal rights for men and women in society are known as gender ______________.', options: ['A. balance', 'B. equality', 'C. difference', 'D. skill'], answer: 'B' }
+            ],
+            verb_tenses_mcq: [
+                { type: 'mcq', text: 'Choose the correct form of the verb in brackets.', options: [], answer: '' },
+                { type: 'mcq', text: 'If it rains tonight, we __________ (stay) at home.', options: ['A. stay', 'B. will stay', 'C. would stay', 'D. stayed'], answer: 'B' },
+                { type: 'mcq', text: 'If she studies harder, she __________ (get) better results.', options: ['A. gets', 'B. will get', 'C. would get', 'D. got'], answer: 'B' },
+                { type: 'mcq', text: 'If she __________ (study) harder, she would pass the exam.', options: ['A. studies', 'B. studied', 'C. will study', 'D. has studied'], answer: 'B' },
+                { type: 'mcq', text: 'If it __________ (rain) tomorrow, the trip will be cancelled.', options: ['A. rains', 'B. rained', 'C. will rain', 'D. would rain'], answer: 'A' },
+                { type: 'mcq', text: 'If he __________ (not / hurry), he will be late for work.', options: ['A. doesn’t hurry', 'B. didn’t hurry', 'C. won’t hurry', 'D. wouldn’t hurry'], answer: 'A' },
+                { type: 'mcq', text: 'If I __________ (be) you, I would tell the truth.', options: ['A. am', 'B. was', 'C. were', 'D. have been'], answer: 'C' },
+                { type: 'mcq', text: 'If they don’t hurry, they __________ (miss) the bus.', options: ['A. miss', 'B. will miss', 'C. would miss', 'D. missed'], answer: 'B' },
+                { type: 'mcq', text: 'If I were you, I __________ (accept) this job.', options: ['A. accept', 'B. will accept', 'C. would accept', 'D. accepted'], answer: 'C' },
+                { type: 'mcq', text: 'If we had more time, we __________ (travel) abroad.', options: ['A. travel', 'B. will travel', 'C. would travel', 'D. travelled'], answer: 'C' },
+                { type: 'mcq', text: 'If they __________ (have) enough money, they would buy a new car.', options: ['A. have', 'B. had', 'C. will have', 'D. have had'], answer: 'B' },
+                { type: 'mcq', text: 'She __________ as a nurse for five years.', options: ['A. works', 'B. worked', 'C. has worked', 'D. is working'], answer: 'C' },
+                { type: 'mcq', text: 'I __________ this film before.', options: ['A. see', 'B. saw', 'C. have seen', 'D. am seeing'], answer: 'C' },
+                { type: 'mcq', text: 'They __________ their homework already.', options: ['A. finish', 'B. finished', 'C. have finished', 'D. are finishing'], answer: 'C' },
+                { type: 'mcq', text: 'He __________ to London twice.', options: ['A. goes', 'B. went', 'C. has gone', 'D. is going'], answer: 'C' },
+                { type: 'mcq', text: 'We __________ each other since primary school.', options: ['A. has known', 'B. knew', 'C. have known', 'D. are knowing'], answer: 'C' },
+                { type: 'mcq', text: 'My brother __________ as a computer programmer for three years.', options: ['A. works', 'B. worked', 'C. has worked', 'D. is working'], answer: 'C' },
+                { type: 'mcq', text: 'She __________ her keys, so she can’t open the door.', options: ['A. loses', 'B. lost', 'C. has lost', 'D. is losing'], answer: 'C' },
+                { type: 'mcq', text: 'This is the first time I __________ such a difficult test.', options: ['A. take', 'B. took', 'C. have taken', 'D. am taking'], answer: 'C' },
+                { type: 'mcq', text: 'Scientists __________ many discoveries in recent years.', options: ['A. make', 'B. made', 'C. have made', 'D. are making'], answer: 'C' },
+                { type: 'mcq', text: 'He __________ his project yet.', options: ['A. doesn’t finish', 'B. didn’t finish', 'C. hasn’t finished', 'D. isn’t finishing'], answer: 'C' }
+            ],
+            synonyms: [
+                { type: 'mcq', text: 'Mark the letter A, B, C or D on your answer sheet to indicate the word or phrase that is CLOSEST in meaning to the underlined part in each of the following questions.', options: [], answer: '' },
+                { type: 'mcq', text: '1. During the Covid-19 lockdown, authorized forces and volunteers <u>gave out</u> food and medical supplies to households across Ho Chi Minh city.', options: ['A. donated', 'B. produced', 'C. distributed', 'D. sold'], answer: 'C' },
+                { type: 'mcq', text: '2. CARE International is one of the biggest organisations which <u>support</u> people to fight poverty and injustice.', options: ['A. rescue', 'B. develop', 'C. look after', 'D. help'], answer: 'D' },
+                { type: 'mcq', text: '3. When you <u>fit in</u> with your colleagues, you can communicate more effectively with your team, which leads to high levels of performance.', options: ['A. make friends', 'B. work together', 'C. get along', 'D. take after'], answer: 'C' },
+                { type: 'mcq', text: '5. The money will be used to <u>provide</u> the school with new computer equipment.', options: ['A. give', 'B. offer', 'C. donate', 'D. supply'], answer: 'D' },
+                { type: 'mcq', text: '6. It is <u>foolish</u> of him to do out alone at midnight.', options: ['A. smart', 'B. handsome', 'C. crazy', 'D. normal'], answer: 'C' },
+                { type: 'mcq', text: '7. Nam is very <u>smart</u>. He always answers the teacher’s question well.', options: ['A. happy', 'B. clever', 'C. lazy', 'D. hardworking'], answer: 'B' },
+                { type: 'mcq', text: '8. Hoa is a good friend. She always <u>shares</u> things with her classmate.', options: ['A. gives', 'B. needs', 'C. takes', 'D. wants'], answer: 'A' },
+                { type: 'mcq', text: '9. <u>Personality</u> is more important than appearance.', options: ['A. Zodiac', 'B. Appearance', 'C. Characteristic', 'D. Date of birth'], answer: 'C' },
+                { type: 'mcq', text: '10. There’s a way to spend your weekend <u>enjoying yourself</u>.', options: ['A. having a good time', 'B. having a bad time', 'C. being unhappy', 'D. being unfriendly'], answer: 'A' },
+                { type: 'mcq', text: '11. My grandmother usually <u>looks after</u> us when my mother has a business trip.', options: ['A. looks at', 'B. takes care of', 'C. helps', 'D. stays with'], answer: 'B' },
+                { type: 'mcq', text: '12. The cold weather has made it <u>necessary</u> to protect the crops.', options: ['A. popular', 'B. essential', 'C. incredible', 'D. unbelievable'], answer: 'B' }
+            ],
+            antonyms: [
+                { type: 'mcq', text: 'Choose the word or phrase that is OPPOSITE in meaning to the underlined part in each of the following sentences.', options: [], answer: '' },
+                { type: 'mcq', text: '1. WWF aims to <u>protect</u> endangered species and their habitats.', options: ['A. prevent', 'B. harm', 'C. save', 'D. destroy'], answer: 'D' },
+                { type: 'mcq', text: '2. <u>Picking up</u> rubbish from the streets is fun and simple but it can bring great benefits to your community.', options: ['A. cleaning up', 'B. collecting', 'C. putting away', 'D. littering'], answer: 'D' },
+                { type: 'mcq', text: '3. Surgeons need to be really <u>careful</u> when they perform operations. One mistake can cost the patient’s life.', options: ['A. unkind', 'B. disorganized', 'C. cautious', 'D. careless'], answer: 'D' },
+                { type: 'mcq', text: '4. Working in an <u>organized</u> team can help increase productivity and personal growth.', options: ['A. tidy', 'B. chaotic', 'C. effective', 'D. efficient'], answer: 'B' },
+                { type: 'mcq', text: '5. Family plays an <u>integral</u> part in our lives. It’s hard to live without family’s love and support.', options: ['A. important', 'B. huge', 'C. amazing', 'D. unnecessary'], answer: 'D' },
+                { type: 'mcq', text: '6. Doing morning exercises is an <u>exciting</u> activity for students.', options: ['A. interesting', 'B. happy', 'C. hard', 'D. boring'], answer: 'D' },
+                { type: 'mcq', text: '7. Our teacher <u>remembers</u> all of my classmates’ birthday.', options: ['A. gives', 'B. forgets', 'C. asks', 'D. has'], answer: 'B' },
+                { type: 'mcq', text: '8. Nancy is very <u>independent</u>. He lived by himself when he was 15 years old.', options: ['A. free', 'B. reliable', 'C. dependable', 'D. dependent'], answer: 'D' },
+                { type: 'mcq', text: '9. I’ve just had a <u>terrible</u> thought. He may never come back from the battle field.', options: ['A. awful', 'B. horrible', 'C. fantastic', 'D. dreadful'], answer: 'C' },
+                { type: 'mcq', text: '10. The law <u>protects</u> ancient monuments and old churches.', options: ['A. modern', 'B. old', 'C. traditional', 'D. historic'], answer: 'A' }
+            ],
+            put_verbs: [
+                { type: 'fill', text: 'PUT THE VERBS IN THE CORRECT FORM', answer: '' },
+                { type: 'fill', text: '1. Would you like if I …………………..(close) the windows?', answer: 'closed' },
+                { type: 'fill', text: '2. What would happen if I …………………(not do) that?', answer: 'did not do' },
+                { type: 'fill', text: '3. He couldn’t understand if we ………………..(not explain) more.', answer: 'did not explain' },
+                { type: 'fill', text: '4. If we didn’t visit her, she ……………………(be) very sad.', answer: 'would be' },
+                { type: 'fill', text: '5. We …………………(not be) tired if we didn’t try to do that', answer: 'would not be' },
+                { type: 'fill', text: '6. I (buy) ……………………. a car if you lend me some money.', answer: 'will buy' },
+                { type: 'fill', text: '7. If the book (not be) ………………………….expensive, I\'ll buy it.', answer: 'is not' },
+                { type: 'fill', text: '8. I\'ll go out if it (not rain) …………………..', answer: 'does not rain' },
+                { type: 'fill', text: '9. If that hat costs much, I (buy) …………………a small one.', answer: 'will buy' },
+                { type: 'fill', text: '10. If she (make) …………………….that mistake again, her teacher will get angry with her.', answer: 'makes' },
+                { type: 'fill', text: '11. I will lend them some money if they (ask) ………………….me.', answer: 'ask' },
+                { type: 'fill', text: '12. My dog will bark if it (hear) …………………………any strange sound.', answer: 'hears' },
+                { type: 'fill', text: '13. They (let) …………………….you in if you come late.', answer: 'will let' },
+                { type: 'fill', text: '14. He’s waiting for his mother to come back from Chicago. If his mother (come) ……………home, he will have a lot of presents.', answer: 'comes' },
+                { type: 'fill', text: '15. The kitchen will look better if we (have) …………………….red curtains.', answer: 'have' },
+                { type: 'fill', text: '16. If I refused, he …………………….(be) very disappointed.', answer: 'would be' },
+                { type: 'fill', text: '17. I ……………………(take) this job if I were out of work now.', answer: 'would take' },
+                { type: 'fill', text: '18. You would be very upset if you …………………(lose) it.', answer: 'lost' },
+                { type: 'fill', text: '19. He would feel better if he …………………(exercise) more.', answer: 'exercised' },
+                { type: 'fill', text: '20. If I ………………..(have) a lot of money, I will travel around the world.', answer: 'had' },
+                { type: 'fill', text: '21. I (tell)……………………….. the answer if I knew it.', answer: 'would tell' },
+                { type: 'fill', text: '22. If we …………………(not come) she would feel lonely.', answer: 'did not come' },
+                { type: 'fill', text: '23. If we didn’t take this job, we……………….. (not earn) a lot of money.', answer: 'would not earn' },
+                { type: 'fill', text: '24. If he knew that it was dangerous, he (not come)………………………', answer: 'would not come' },
+                { type: 'fill', text: '25. If you (see) …………………..someone drowning, what would you do?', answer: 'saw' },
+                { type: 'fill', text: '26. If you slept under a mosquito net, you (not be)………………………..bitten so often.', answer: 'would not be' },
+                { type: 'fill', text: '27. If he (speak) ……………………….more slowly, we will understand him.', answer: 'spoke' },
+                { type: 'fill', text: '28. We would be in Hanoi now if the weather (not be) ……………………..so bad.', answer: 'was not' },
+                { type: 'fill', text: '29. If he did not play games online too much, he (be) ………………..a good student now.', answer: 'would be' },
+                { type: 'fill', text: '30. They wouldn\'t come to the party if you (not invite) ……………………them.', answer: 'did not invite' },
+                { type: 'fill', text: '31. What would you do if you (be) ………………..him?', answer: 'were' },
+                { type: 'fill', text: '32. If I spoke English, my job (be) ……………………….a lot easier.', answer: 'would be' },
+                { type: 'fill', text: '33. If he (have) ………………………enough money, he would buy a house.', answer: 'had' },
+                { type: 'fill', text: '34. If I (be) ………………….you, I would tell the truth.', answer: 'were' },
+                { type: 'fill', text: '35. If I knew his address, I (go) ……………………………..round and see him.', answer: 'would go' },
+                { type: 'fill', text: '36. It’s too bad Helen isn’t here. If she (be) …………………….here, she could know what to do.', answer: 'were' },
+                { type: 'fill', text: '37. If Betty (not / like)…………………… the sweater, she will exchange it.', answer: 'does not like' },
+                { type: 'fill', text: '38. What ……………..you (do)…………………. if you have a million dollars?', answer: 'would you do' },
+                { type: 'fill', text: '39. You will get much higher marks if you (study) ………………………. harder.', answer: 'study' },
+                { type: 'fill', text: '40. If he (not/ ask)……………………… me , I will not tell him anything.', answer: 'does not ask' },
+                { type: 'fill', text: '41. Father will surely get wet if he (not/ take)…………………… his umbrella.', answer: 'does not take' },
+                { type: 'fill', text: '42. If I (be)…………………….. in your place, I will accept his offer.', answer: 'were' },
+                { type: 'fill', text: '43. If it …………………(rain) we will stay at home.', answer: 'rains' },
+                { type: 'fill', text: '44. If I see him , I _____ (give ) him a gift.', answer: 'will give' },
+                { type: 'fill', text: '45. If I had a typewriter, I _____ (type) it myself.', answer: 'would type' },
+                { type: 'fill', text: '46. If I had known that you were in hospital, I _____ (visit) you.', answer: 'would have visited' },
+                { type: 'fill', text: '47. You could make better progress if you _____ (attend) class regularly.', answer: 'attended' },
+                { type: 'fill', text: '48. If I _____ (know) his telephone number, I’d give it to you.', answer: 'knew' },
+                { type: 'fill', text: '49. If you _____ (arrive) ten minutes earlier, you would have got a seat.', answer: 'had arrived' },
+                { type: 'fill', text: '50. If he worked more slowly, he _____ (not make) so many mistakes.', answer: 'would not make' },
+                { type: 'fill', text: '51. I shouldn’t drink that wine if I _____ (be) you.', answer: 'were' },
+                { type: 'fill', text: '52. If I _____ (find) a cheap room, I will stay a fortnight.', answer: 'find' },
+                { type: 'fill', text: '53. A lot of people _____ (be) out of work if the factory closed down.', answer: 'would be' },
+                { type: 'fill', text: '54. I (do)__________it for you tomorrow.', answer: 'will do' },
+                { type: 'fill', text: '55. My father (call)_____________you in 5 minutes.', answer: 'will call' },
+                { type: 'fill', text: '56. We believe that she (recover)_______________from her illness soon.', answer: 'will recover' },
+                { type: 'fill', text: '57. I promise I (return)______________to school on time.', answer: 'will return' },
+                { type: 'fill', text: '58. If it rains, he (stay)____________at home.', answer: 'will stay' },
+                { type: 'fill', text: '59. You (take) me to the zoo this weekend?', answer: 'will you take' },
+                { type: 'fill', text: '60. I think he (not come)_______________back his hometown.', answer: 'will not come' },
+                { type: 'fill', text: '61. ‘I haven’t got my phone.’ ‘That’s OK. I __________ (lend) you mine.’', answer: 'will lend' },
+                { type: 'fill', text: '62. It’s Julia’s birthday next week, so we __________ (buy) her some flowers.', answer: 'will buy' },
+                { type: 'fill', text: '63. Will you lend me £10? I promise I __________ (give) it back to you tomorrow.', answer: 'will give' },
+                { type: 'fill', text: '64. We __________ (have) a barbecue tomorrow. It’s all planned, so I hope it won’t rain.', answer: 'will have' },
+                { type: 'fill', text: '65. ‘Jim’s starting university tomorrow.’ ‘What __________ (he/ study)?’', answer: 'will he study' },
+                { type: 'fill', text: '66. You __________ (not like) that film. It’s very frightening. Let’s choose another one.', answer: 'will not like' },
+                { type: 'fill', text: '67. Do you think they __________ (like) the presents we got for them?', answer: 'will like' },
+                { type: 'fill', text: '68. Look! The coach __________ (leave)! Run or we’ll miss it.', answer: 'is leaving' },
+                { type: 'fill', text: '69. I love London. I (probably / go) ……………………………………….there next year.', answer: 'will probably go' },
+                { type: 'fill', text: '70. What (wear / you) …………………………………at the party tonight?', answer: 'will you wear' },
+                { type: 'fill', text: '71. I haven\'t made up my mind yet. But I think I (find) ………………………………something nice in my mum\'s wardrobe.', answer: 'will find' },
+                { type: 'fill', text: '72. I completely forget about this. Give me a moment, I (do)…………………………………. it now.', answer: 'will do' },
+                { type: 'fill', text: '73. Tonight, I (stay) ……………………………………….home. I\'ve rented a video.', answer: 'will stay' },
+                { type: 'fill', text: '74. I feel dreadful. I (be) ……………………………………….sick.', answer: 'am going to be' },
+                { type: 'fill', text: '75. If you have any problem, I (help) ………………………………….you.', answer: 'will help' },
+                { type: 'fill', text: '76. The weather forecast says it (not/ rain) …………………………………..tomorrow', answer: 'will not rain' },
+                { type: 'fill', text: '77. I promise that I (not/ come) ……………………………………………late.', answer: 'will not come' }
+            ],
+            reading: [
+                { type: 'mcq', text: 'Exercise 5: Read the passages below and choose the correct answer among A, B, C or D.', options: [], answer: '' },
+                { type: 'mcq', text: 'Câu 1: According to the writer.', options: ['A. English is popular in much of the world', 'B. English is useful only to teenagers.', 'C. No children like learning English', 'D. Only adults learn English.'], answer: 'A' },
+                { type: 'mcq', text: 'Câu 2: Many people learn English by', options: ['A. hearing the language in the office', 'B. watch video only', 'C. taking with the film stars', 'D. working hard on their lessons.'], answer: 'D' },
+                { type: 'mcq', text: 'Câu 3: Many boys and girls learn English because', options: ['A. their parents make them', 'B. they have to study their own language', 'C. English can give them a job', 'D. It is included in their courses'], answer: 'D' },
+                { type: 'mcq', text: 'Câu 4: Many adults learn English because.', options: ['A. They want to go abroad', 'B. It helps them in their work', 'C. Most of their books are in English', 'D. Their work is useful'], answer: 'B' },
+                { type: 'mcq', text: 'Câu 5: In America or in Australia, many schoolchildren study', options: ['A. Such foreign languages as French, German and Spanish', 'B. English as a foreign language', 'C. English and mathematics only.', 'D. Their own language and no foreign language'], answer: 'A' }
+            ]
+        };
+
+        const partTitles = {
+            pronunciation: 'Exercise 1: PHONETICS - PRONUNCIATION',
+            stress: 'WORD STRESS',
+            exercise3_fill: 'Exercise 3: GRAMMAR & VOCABULARY - FILL IN THE BLANKS',
+            exercise3_mcq: 'Exercise 3: GRAMMAR & VOCABULARY - MULTIPLE CHOICE',
+            vocabulary_jobs: 'VOCABULARY - JOBS & WORK',
+            verb_tenses_mcq: 'VERB TENSES - MULTIPLE CHOICE',
+            synonyms: 'SYNONYMS',
+            antonyms: 'ANTONYMS',
+            put_verbs: 'PUT THE VERBS IN THE CORRECT FORM',
+            reading: 'Exercise 5: READING COMPREHENSION'
+        };
+
+        function shuffle(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        let globalIndex = 0;
+        let allQuestions = [];
+
+        function loadExam() {
+            const form = document.getElementById('examForm');
+            form.innerHTML = '';
+            globalIndex = 0;
+            allQuestions = [];
+
+            const order = ['pronunciation', 'stress', 'exercise3_fill', 'exercise3_mcq', 'vocabulary_jobs', 'verb_tenses_mcq', 'synonyms', 'antonyms', 'put_verbs', 'reading'];
+
+            order.forEach(key => {
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'part-title';
+                titleDiv.innerHTML = partTitles[key];
+                form.appendChild(titleDiv);
+
+                const shuffled = shuffle(parts[key]);
+                shuffled.forEach(q => {
+                    if (q.type === 'mcq' && q.options.length === 0) {
+                        // Chỉ hiển thị tiêu đề, không tạo câu hỏi
+                        const container = document.createElement('div');
+                        container.className = 'question-container';
+                        container.innerHTML = `<div>${q.text}</div>`;
+                        form.appendChild(container);
+                    } else if (q.type === 'fill' && q.answer === '') {
+                        const container = document.createElement('div');
+                        container.className = 'question-container';
+                        container.innerHTML = `<div>${q.text}</div>`;
+                        form.appendChild(container);
+                    } else {
+                        allQuestions.push(q);
+                        addQuestion(q, globalIndex);
+                        globalIndex++;
+                    }
+                });
+            });
+        }
+
+        function addQuestion(q, idx) {
+            const container = document.createElement('div');
+            container.className = 'question-container';
+
+            const header = document.createElement('div');
+            header.innerHTML = `<span class="question-number">${idx + 1}</span><span class="question-text">${q.text}</span>`;
+            container.appendChild(header);
+
+            if (q.type === 'mcq') {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                q.options.forEach(opt => {
+                    const div = document.createElement('div');
+                    div.className = 'option';
+                    div.innerHTML = `<label><input type="radio" name="q${idx}" value="${opt.charAt(0)}"> ${opt}</label>`;
+                    optionsDiv.appendChild(div);
+                });
+                container.appendChild(optionsDiv);
+            } else {
+                container.innerHTML += `<input type="text" class="fill-input" name="q${idx}" placeholder="Nhập đáp án...">`;
+            }
+            document.getElementById('examForm').appendChild(container);
+        }
+
+        function submitExam() {
+            let correct = 0;
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = '';
+
+            allQuestions.forEach((q, idx) => {
+                let userAnswer = '';
+                const radio = document.querySelector(`input[name="q${idx}"]:checked`);
+                const input = document.querySelector(`input[name="q${idx}"][type="text"]`);
+                if (radio) userAnswer = radio.value;
+                else if (input) userAnswer = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+                const correctAns = q.answer.toString().toLowerCase().replace(/\s+/g, ' ');
+                const isCorrect = userAnswer === correctAns;
+                if (isCorrect) correct++;
+
+                const item = document.createElement('div');
+                item.className = 'answer-item';
+                item.innerHTML = `<strong>Câu ${idx + 1}:</strong> ${q.text}<br>
+                                  <span class="${isCorrect ? 'correct' : 'incorrect'}">${isCorrect ? '✓ Đúng' : '✗ Sai'} - Đáp án đúng: <strong>${q.answer}</strong></span>`;
+                answersDiv.appendChild(item);
+            });
+
+            document.getElementById('totalScoreDisplay').textContent = `${correct}/${allQuestions.length}`;
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('submitBtn').style.display = 'none';
+        }
+
+        function retryExam() {
+            loadExam();
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        loadExam();
+    </script>
+</body>
+</html>
