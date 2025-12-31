@@ -1,76 +1,446 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="default">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azota - REVIEW THE FIRST TERM - 10 BRIGHT - HK1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ÔN TẬP TIẾNG ANH 10 - HỌC KỲ I</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1C3FAA',
+                        success: '#91C714',
+                        danger: '#D32929',
+                        pink: '#EC4899',
+                        green: '#10B981',
+                        blue: '#3B82F6',
+                        red: '#EF4444',
+                        purple: '#8B5CF6'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Roboto', sans-serif; background: #f5f7fa; margin: 0; padding: 20px; color: #333; }
-        .header { text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .header h1 { margin: 0; font-size: 28px; font-weight: 700; }
-        .header p { margin: 10px 0 0; font-size: 18px; opacity: 0.9; }
-        .part-title { font-size: 22px; font-weight: 700; color: #667eea; margin: 40px 0 20px 0; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
-        .note { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; border-radius: 8px; margin-bottom: 30px; font-size: 15px; }
-        .question-container { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: all 0.3s; }
-        .question-container:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
-        .question-number { display: inline-block; background: #667eea; color: white; width: 32px; height: 32px; line-height: 32px; text-align: center; border-radius: 50%; font-weight: 700; margin-right: 12px; font-size: 15px; }
-        .question-text { display: inline-block; vertical-align: middle; width: calc(100% - 50px); font-size: 16px; line-height: 1.6; }
-        u { color: #d32f2f; font-weight: bold; }
-        .options { margin-top: 15px; padding-left: 10px; }
-        .option { margin-bottom: 12px; }
-        .option label { display: flex; align-items: center; font-size: 16px; cursor: pointer; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
-        .option label:hover { background: #f0f4ff; }
-        .option input[type="radio"] { margin-right: 12px; transform: scale(1.2); }
-        .fill-input { width: 100%; max-width: 500px; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; margin-top: 15px; }
-        .fill-input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
-        #submitBtn { display: block; margin: 40px auto; padding: 14px 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
-        #submitBtn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(102,126,234,0.5); }
-        #retryBtn { display: block; margin: 20px auto; padding: 12px 30px; background: #4caf50; color: white; border: none; border-radius: 50px; font-size: 16px; font-weight: 500; cursor: pointer; }
-        .result { background: white; border-radius: 12px; padding: 25px; margin-top: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: none; }
-        .score-section { display: flex; justify-content: center; gap: 40px; margin: 20px 0; flex-wrap: wrap; }
-        .score-box { background: #667eea; color: white; padding: 20px; border-radius: 12px; text-align: center; min-width: 200px; }
-        .score-box h3 { margin: 0 0 10px 0; font-size: 18px; }
-        .score-box p { margin: 0; font-size: 28px; font-weight: 700; }
-        .answer-item { padding: 12px 0; border-bottom: 1px solid #eee; }
-        .answer-item:last-child { border-bottom: none; }
-        .correct { color: #4caf50; font-weight: 700; }
-        .incorrect { color: #f44336; font-weight: 700; }
+        :root {
+            --primary-color: #1C3FAA;
+            --success-color: #91C714;
+            --danger-color: #D32929;
+            --bg-color: #f8fafc;
+            --card-bg: rgba(255,255,255,0.9);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
+        [data-theme="pink"] { --primary-color: #EC4899; --success-color: #10B981; --danger-color: #EF4444; }
+        [data-theme="green"] { --primary-color: #10B981; --success-color: #EC4899; --danger-color: #EF4444; }
+        [data-theme="blue"] { --primary-color: #3B82F6; --success-color: #10B981; --danger-color: #EF4444; }
+        [data-theme="red"] { --primary-color: #EF4444; --success-color: #10B981; --danger-color: #EC4899; }
+        [data-theme="purple"] { --primary-color: #8B5CF6; --success-color: #10B981; --danger-color: #EF4444; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .animated-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(-45deg, var(--primary-color), var(--primary-color)80%, #ffffff20);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(120,119,198,0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255,119,198,0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(120,219,255,0.3) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(180deg); } }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.2);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 30px 80px rgba(0,0,0,0.15); }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), rgba(28,63,170,0.8));
+            color: white;
+            padding: 40px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: url('https://i.ibb.co/HfM9CsKV/V-1.png') no-repeat center/cover;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border: 4px solid white;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .mode-card {
+            padding: 50px 24px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            backdrop-filter: blur(20px);
+        }
+
+        .mode-btn {
+            display: block;
+            width: 100%;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 28px;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.95);
+            border: 2px solid rgba(28,63,170,0.2);
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(28,63,170,0.2);
+        }
+
+        .question-card {
+            padding: 40px 24px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        .part-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 48px 0 32px;
+            text-transform: uppercase;
+        }
+
+        .question-num {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 18px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+        }
+
+        .option {
+            background: rgba(248,250,252,0.8);
+            border: 2px solid rgba(226,232,240,0.8);
+            border-radius: 16px;
+            padding: 24px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .option input {
+            margin-right: 16px;
+            transform: scale(1.3);
+            accent-color: var(--primary-color);
+        }
+
+        .option:hover {
+            background: rgba(238,242,255,0.8);
+            border-color: var(--primary-color);
+            transform: translateX(8px);
+        }
+
+        .fill-input {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: 2px solid rgba(226,232,240,0.8);
+            margin-top: 12px;
+            transition: border-color 0.3s;
+        }
+
+        .fill-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(28,63,170,0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), rgba(28,63,170,0.8));
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 19px;
+            font-weight: 600;
+            margin-top: 32px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(28,63,170,0.3);
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(28,63,170,0.4);
+        }
+
+        .feedback {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            font-size: 20px;
+            text-align: center;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s;
+        }
+
+        .feedback.show { opacity: 1; transform: translateY(0); }
+        .feedback.correct { background: rgba(212,237,218,0.9); color: #155724; border: 1px solid var(--success-color); }
+        .feedback.wrong { background: rgba(252,232,232,0.9); color: #721c24; border: 1px solid var(--danger-color); }
+
+        .note {
+            background: rgba(255,255,255,0.95);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .settings-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-icon {
+            width: 32px;
+            height: 32px;
+            background: url('https://cdn-icons-png.flaticon.com/512/2040/2040504.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .setting-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .setting-overlay.show { display: flex; }
+
+        .theme-selector {
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .theme-btn {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 10px;
+            cursor: pointer;
+            border: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .theme-btn.active {
+            border-color: #fff;
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.2rem; }
+            .header .avatar { width: 80px; height: 80px; }
+            .question-num, .part-title { font-size: 24px; }
+            .settings-btn { width: 50px; height: 50px; top: 10px; right: 10px; }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>REVIEW THE FIRST TERM - 10 BRIGHT - HK1</h1>
-        <p>Bài ôn tập học kỳ 1 - Tiếng Anh lớp 10</p>
+    <div class="animated-bg"></div>
+
+    <div class="settings-btn" id="settings-btn">
+        <div class="settings-icon"></div>
     </div>
 
-    <div class="note">
-        <strong>Lưu ý:</strong><br>
-        - Phần phát âm: Các phần được <u>gạch chân đỏ</u> là phần cần chú ý phát âm khác biệt.<br>
-        - Phần điền từ không phân biệt chữ hoa/thường, bỏ qua khoảng trắng thừa.<br>
-        - Mỗi lần reload hoặc "Làm lại", chỉ random câu hỏi bên trong từng phần, không trộn lẫn giữa các phần.<br>
-        - Các từ viết tắt như didn't,wont,don't doesn't không được chấp nhận phải đổi về dạng did not,will not ,...<br>
-    </div>
-
-    <form id="examForm"></form>
-
-    <button id="submitBtn" type="button" onclick="submitExam()">NỘP BÀI</button>
-
-    <div class="result" id="result">
-        <div class="score-section">
-            <div class="score-box"><h3>Điểm số</h3><p id="totalScoreDisplay">0/0</p></div>
+    <div class="setting-overlay" id="setting-overlay">
+        <div class="theme-selector">
+            <h3 class="text-2xl font-bold mb-8">Chọn màu chủ đề</h3>
+            <div class="theme-btn active" style="background: #1C3FAA;" data-theme="default"></div>
+            <div class="theme-btn" style="background: #EC4899;" data-theme="pink"></div>
+            <div class="theme-btn" style="background: #10B981;" data-theme="green"></div>
+            <div class="theme-btn" style="background: #3B82F6;" data-theme="blue"></div>
+            <div class="theme-btn" style="background: #EF4444;" data-theme="red"></div>
+            <div class="theme-btn" style="background: #8B5CF6;" data-theme="purple"></div>
         </div>
-        <div id="answers"></div>
-        <button id="retryBtn" onclick="retryExam()">LÀM LẠI</button>
+    </div>
+
+    <div class="container pt-8">
+        <!-- HEADER DUY NHẤT -->
+        <div class="card header mb-8">
+            <div class="avatar"></div>
+            <h1>ÔN TẬP TIẾNG ANH 10</h1>
+            <small class="text-white/80">Học kỳ I - 2025</small>
+        </div>
+
+        <!-- CHỌN CHẾ ĐỘ -->
+        <div id="mode-selection" class="card mode-card">
+            <h2 class="text-3xl font-bold text-[var(--primary-color)] mb-8">Chọn chế độ làm bài</h2>
+            <button class="mode-btn" id="mode-exam">
+                <div class="text-4xl mb-4">📝</div>
+                Chế độ thi
+                <p class="text-lg mt-4 text-[var(--text-secondary)]">Làm toàn bộ đề một lần</p>
+            </button>
+            <button class="mode-btn" id="mode-challenge">
+                <div class="text-4xl mb-4">⚔️</div>
+                Chế độ thử thách
+                <p class="text-lg mt-4 text-[var(--text-secondary)]">Làm từng câu - Sai là làm lại từ đầu</p>
+            </button>
+        </div>
+
+        <!-- KHU VỰC LÀM BÀI -->
+        <div id="quiz-area" class="hidden mt-8">
+            <div id="exam-mode" class="hidden">
+                <div class="note card mb-8">
+                    <strong>Lưu ý:</strong><br>
+                    - Phần phát âm: Chú ý phần được <u>gạch chân</u>.<br>
+                    - Phần điền từ: Không phân biệt hoa/thường, bỏ qua khoảng trắng thừa.<br>
+                    - Không chấp nhận dạng viết tắt (didn't, won't...) - phải dùng dạng đầy đủ.
+                </div>
+                <div id="exam-questions"></div>
+                <button class="submit-btn card" id="submit-exam">NỘP BÀI & CHẤM ĐIỂM</button>
+                <div id="exam-result" class="hidden card mt-8 text-center py-12">
+                    <h2 class="text-3xl font-bold text-[var(--primary-color)] mb-6">KẾT QUẢ</h2>
+                    <div id="exam-result-text" class="text-5xl font-bold mb-8"></div>
+                    <button class="submit-btn card mt-8" id="back-to-mode">Quay lại chọn chế độ</button>
+                </div>
+            </div>
+
+            <div id="challenge-mode" class="hidden">
+                <div class="card question-card text-center">
+                    <div id="challenge-progress" class="text-xl font-medium text-[var(--primary-color)] mb-6"></div>
+                    <div class="mb-8">
+                        <div class="text-6xl font-bold text-[var(--primary-color)]" id="current-streak">0</div>
+                        <div class="text-xl text-[var(--text-secondary)]">Chuỗi đúng liên tiếp</div>
+                    </div>
+                    <div id="current-question"></div>
+                    <button class="submit-btn hidden" id="submit-current">NỘP CÂU NÀY</button>
+                    <button class="submit-btn hidden" id="next-question">CÂU TIẾP THEO</button>
+                    <div id="challenge-feedback" class="feedback hidden"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Các phần riêng biệt, đúng theo file gốc
-        const parts = {
+        // Theme switching
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme || 'default';
+                document.documentElement.setAttribute('data-theme', theme);
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Settings overlay
+        document.getElementById('settings-btn').addEventListener('click', e => {
+            e.stopPropagation();
+            document.getElementById('setting-overlay').classList.toggle('show');
+        });
+        document.getElementById('setting-overlay').addEventListener('click', e => {
+            if (e.target === document.getElementById('setting-overlay')) {
+                document.getElementById('setting-overlay').classList.remove('show');
+            }
+        });
+const parts = {
             pronunciation: [
                 { type: 'mcq', text: 'Exercise 1: Mark the letter A, B, C or D to indicate the word whose <u>underlined</u> part differs from the other three in pronunciation.', options: ['A. <u>ch</u>aracteristic', 'B. <u>Ch</u>ristmas', 'C. <u>ch</u>allenge', 'D. <u>ch</u>emical'], answer: 'B' },
                 { type: 'mcq', text: '2.', options: ['A. mu<u>s</u>eum', 'B. di<u>s</u>appointed', 'C. mu<u>s</u>cal', 'D. amu<u>s</u>ing'], answer: 'B' },
-                { type: 'mcq', text: '3.', options: ['A. painting<u>s</u>', 'B. event<u></u>s', 'C. remark<u>s</u>', 'D. photograph<u>s</u>'], answer: 'B' },
+                { type: 'mcq', text: '3.', options: ['A. painting<u>s</u>', 'B. event<u>s</u>', 'C. remark<u>s</u>', 'D. photograph<u>s</u>'], answer: 'B' },
                 { type: 'mcq', text: '4.', options: ['A. <u>g</u>ame', 'B. <u>g</u>oods', 'C. <u>g</u>ift', 'D. <u>g</u>ym'], answer: 'B' },
                 { type: 'mcq', text: '5.', options: ['A. bl<u>oo</u>d', 'B. aftern<u>oo</u>n', 'C. f<u>oo</u>d', 'D. m<u>oo</u>n'], answer: 'A' },
                 { type: 'mcq', text: '6.', options: ['A. m<u>a</u>n', 'B. m<u>a</u>ny', 'C. c<u>a</u>t', 'D. marath<u>o</u>n'], answer: 'B' },
@@ -104,8 +474,8 @@
                 { type: 'fill', text: '7. My son hopes he will become a(n) ______________ when he grows up. He wants to travel into space.', answer: 'astronaut' },
                 { type: 'fill', text: '8. On the ticket it says that my plane ______________ at 22:30 on Friday.', answer: 'departs' },
                 { type: 'fill', text: '9. The classrooms have been ______________ with interactive whiteboards.', answer: 'equipped' },
-                { type: 'fill', text: '10. When you fit in with your colleagues, you can communicate more effectively with your team, which leads to high levels of performance.', answer: 'get along' },
-                { type: 'fill', text: '11. Fashion designers need to be inventive so that they can turn a piece of cloth into fashionable clothing.', answer: 'creative' },
+                { type: 'fill', text: '10. When you "fit in" with your colleagues, you can communicate more effectively with your team, which leads to high levels of performance.', answer: 'get along' },
+                { type: 'fill', text: '11. Fashion designers need to be "inventive" so that they can turn a piece of cloth into fashionable clothing.', answer: 'creative' },
                 { type: 'fill', text: '12. Student A: “I believe women have rights to pursue any jobs that they want.”<br>Student B: “______________. Nowadays, women are getting into male-dominated areas of work.”', answer: 'i agree' },
                 { type: 'fill', text: '13. Student A: “I think being a firefighter is a dangerous but rewarding job.”<br>Student B: “______________. It’s a great job if you enjoy helping people and serving the community.”', answer: 'i agree' },
                 { type: 'fill', text: '14. He resigned from a safe and ______________ job to start his own business.', answer: 'secure' },
@@ -312,7 +682,7 @@
                 { type: 'fill', text: '47. You could make better progress if you _____ (attend) class regularly.', answer: 'attended' },
                 { type: 'fill', text: '48. If I _____ (know) his telephone number, I’d give it to you.', answer: 'knew' },
                 { type: 'fill', text: '49. If you _____ (arrive) ten minutes earlier, you would have got a seat.', answer: 'had arrived' },
-                { type: 'fill', text: '50. If he worked more slowly, he _____ (not make) so many mistakes.', answer: 'would not make' },
+                { type: 'fill', text: '50. If you worked more slowly, he _____ (not make) so many mistakes.', answer: 'would not make' },
                 { type: 'fill', text: '51. I shouldn’t drink that wine if I _____ (be) you.', answer: 'were' },
                 { type: 'fill', text: '52. If I _____ (find) a cheap room, I will stay a fortnight.', answer: 'find' },
                 { type: 'fill', text: '53. A lot of people _____ (be) out of work if the factory closed down.', answer: 'would be' },
@@ -350,6 +720,25 @@
                 { type: 'mcq', text: 'Câu 5: In America or in Australia, many schoolchildren study', options: ['A. Such foreign languages as French, German and Spanish', 'B. English as a foreign language', 'C. English and mathematics only.', 'D. Their own language and no foreign language'], answer: 'A' }
             ]
         };
+        // Gắn tên exercise cho từng câu
+const EXERCISE_TITLES = {
+    pronunciation: 'Mark the letter A, B, C or D to indicate the word whose <u>underlined</u> part differs from the other three in pronunciation.',
+    stress: 'Choose the word whose stress pattern is different from that of the others.',
+    exercise3_fill: 'EXERCISE 3 – FILL IN THE BLANKS',
+    exercise3_mcq: 'EXERCISE 3 – MULTIPLE CHOICE',
+    vocabulary_jobs: 'VOCABULARY – JOBS',
+    verb_tenses_mcq: 'VERB TENSES – MCQ',
+    put_verbs: 'PUT THE VERBS IN CORRECT FORM'
+};
+
+// Chuẩn hoá dữ liệu: gắn exerciseKey + title
+Object.keys(parts).forEach(key => {
+    parts[key] = parts[key].map(q => ({
+        ...q,
+        exerciseKey: key,
+        exerciseTitle: EXERCISE_TITLES[key] || 'EXERCISE'
+    }));
+});
 
         const partTitles = {
             pronunciation: 'Exercise 1: PHONETICS - PRONUNCIATION',
@@ -363,114 +752,270 @@
             put_verbs: 'PUT THE VERBS IN THE CORRECT FORM',
             reading: 'Exercise 5: READING COMPREHENSION'
         };
-
-        function shuffle(array) {
-            const arr = [...array];
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
-        let globalIndex = 0;
         let allQuestions = [];
-
-        function loadExam() {
-            const form = document.getElementById('examForm');
-            form.innerHTML = '';
-            globalIndex = 0;
-            allQuestions = [];
-
-            const order = ['pronunciation', 'stress', 'exercise3_fill', 'exercise3_mcq', 'vocabulary_jobs', 'verb_tenses_mcq', 'synonyms', 'antonyms', 'put_verbs', 'reading'];
-
-            order.forEach(key => {
-                const titleDiv = document.createElement('div');
-                titleDiv.className = 'part-title';
-                titleDiv.innerHTML = partTitles[key];
-                form.appendChild(titleDiv);
-
-                const shuffled = shuffle(parts[key]);
-                shuffled.forEach(q => {
-                    if (q.type === 'mcq' && q.options.length === 0) {
-                        // Chỉ hiển thị tiêu đề, không tạo câu hỏi
-                        const container = document.createElement('div');
-                        container.className = 'question-container';
-                        container.innerHTML = `<div>${q.text}</div>`;
-                        form.appendChild(container);
-                    } else if (q.type === 'fill' && q.answer === '') {
-                        const container = document.createElement('div');
-                        container.className = 'question-container';
-                        container.innerHTML = `<div>${q.text}</div>`;
-                        form.appendChild(container);
-                    } else {
-                        allQuestions.push(q);
-                        addQuestion(q, globalIndex);
-                        globalIndex++;
-                    }
-                });
-            });
+        let currentIndex = 0;
+        let streak = 0;
+        let score = 0;
+       
+        function shuffle(array) {
+            const copy = [...array];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j] = copy[j], copy[i]];
+            }
+            return copy;
         }
+       function shuffleArray(arr) {
+    return [...arr].sort(() => Math.random() - 0.5);
+}
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
 
-        function addQuestion(q, idx) {
-            const container = document.createElement('div');
-            container.className = 'question-container';
+function getExamQuestions() {
+    const result = [];
 
-            const header = document.createElement('div');
-            header.innerHTML = `<span class="question-number">${idx + 1}</span><span class="question-text">${q.text}</span>`;
-            container.appendChild(header);
+    Object.values(parts).forEach(part => {
+        const titleItems = part.filter(q => q.answer === '' && q.options?.length === 0);
+        const questions = part.filter(q => q.answer !== '');
+
+        result.push(...titleItems);              // giữ nguyên tiêu đề
+        result.push(...shuffleArray(questions)); // trộn trong Exercise
+    });
+
+    return result;
+}
+function getChallengeQuestions() {
+    let all = [];
+
+    Object.values(parts).forEach(part => {
+        part.forEach(q => {
+            if (q.answer !== '') all.push(q);
+        });
+    });
+
+    return shuffleArray(all);
+}
+function renderChallengeQuestion(q, index, total) {
+    const container = document.getElementById('current-question');
+
+    container.innerHTML = `
+        <div class="part-title">${q.exerciseTitle}</div>
+        <div class="question-num">Câu ${index + 1} / ${total}</div>
+        <div class="question-text">${q.text}</div>
+        ${renderQuestionBody(q)}
+    `;
+}
+function renderQuestionBody(q) {
+    if (q.type === 'mcq') {
+        return q.options.map(opt => `
+            <label class="option">
+                <input type="radio" name="challenge_q" value="${opt[0]}">
+                ${opt}
+            </label>
+        `).join('');
+    }
+
+    if (q.type === 'fill') {
+        return `<input id="challenge_fill" class="fill-input" type="text" placeholder="Nhập câu trả lời">`;
+    }
+
+    return '';
+}
+
+function startExamMode() {
+    allQuestions = [];
+    const container = document.getElementById('exam-questions');
+    container.innerHTML = '';
+
+    document.getElementById('mode-selection').classList.add('hidden');
+    document.getElementById('quiz-area').classList.remove('hidden');
+    document.getElementById('exam-mode').classList.remove('hidden');
+
+    Object.keys(parts).forEach(key => {
+        // ===== TIÊU ĐỀ PHẦN =====
+        const title = document.createElement('div');
+        title.className = 'part-title';
+        title.textContent = partTitles[key] || key.toUpperCase();
+        container.appendChild(title);
+
+        // ===== CHỈ LẤY CÂU CÓ ĐÁP ÁN =====
+        const questions = shuffleArray(
+            parts[key].filter(q => q.answer !== '')
+        );
+
+        questions.forEach(q => {
+            const qIndex = allQuestions.length;
+            allQuestions.push(q);
+
+            const card = document.createElement('div');
+            card.className = 'card question-card mb-8';
+
+            let html = `
+                <div class="question-num">Câu ${qIndex + 1}</div>
+                <div class="question-text">${q.text}</div>
+            `;
 
             if (q.type === 'mcq') {
-                const optionsDiv = document.createElement('div');
-                optionsDiv.className = 'options';
+                html += `<div class="options mt-6 flex flex-col gap-4">`;
                 q.options.forEach(opt => {
-                    const div = document.createElement('div');
-                    div.className = 'option';
-                    div.innerHTML = `<label><input type="radio" name="q${idx}" value="${opt.charAt(0)}"> ${opt}</label>`;
-                    optionsDiv.appendChild(div);
+                    html += `
+                        <label class="option">
+                            <input type="radio" name="q${qIndex}" value="${opt[0]}">
+                            ${opt}
+                        </label>
+                    `;
                 });
-                container.appendChild(optionsDiv);
+                html += `</div>`;
             } else {
-                container.innerHTML += `<input type="text" class="fill-input" name="q${idx}" placeholder="Nhập đáp án...">`;
+                html += `
+                    <input 
+                        type="text" 
+                        class="fill-input" 
+                        name="q${qIndex}" 
+                        placeholder="Nhập đáp án..."
+                    >
+                `;
             }
-            document.getElementById('examForm').appendChild(container);
+
+            card.innerHTML = html;
+            container.appendChild(card);
+        });
+    });
+}
+
+      function startChallengeMode() {
+    allQuestions = getChallengeQuestions();
+    currentIndex = 0;
+    streak = 0;
+
+    document.getElementById('current-streak').textContent = '0';
+    document.getElementById('mode-selection').classList.add('hidden');
+    document.getElementById('quiz-area').classList.remove('hidden');
+    document.getElementById('challenge-mode').classList.remove('hidden');
+
+    showChallengeQuestion();
+}
+
+       
+function showChallengeQuestion() {
+    const q = allQuestions[currentIndex];
+    const total = allQuestions.length;
+
+    document.getElementById('challenge-progress').textContent =
+        `Câu ${currentIndex + 1} / ${total}`;
+
+    document.getElementById('current-question').innerHTML = `
+        <div class="part-title">${q.exerciseTitle}</div>
+        <div class="question-num">Câu ${currentIndex + 1}</div>
+        <div class="question-text">${q.text}</div>
+        ${renderQuestionBody(q)}
+    `;
+
+    document.getElementById('submit-current').classList.remove('hidden');
+    document.getElementById('next-question').classList.add('hidden');
+    document.getElementById('challenge-feedback').classList.add('hidden');
+}
+
+       
+        document.getElementById('submit-current').addEventListener('click', () => {
+    const q = allQuestions[currentIndex];
+    let userAns = '';
+    let isCorrect = false;
+
+    if (q.type === 'mcq') {
+        const selected = document.querySelector('input[name="challenge_q"]:checked');
+        if (!selected) {
+            alert('Vui lòng chọn đáp án!');
+            return;
         }
-
-        function submitExam() {
-            let correct = 0;
-            const answersDiv = document.getElementById('answers');
-            answersDiv.innerHTML = '';
-
-            allQuestions.forEach((q, idx) => {
-                let userAnswer = '';
-                const radio = document.querySelector(`input[name="q${idx}"]:checked`);
-                const input = document.querySelector(`input[name="q${idx}"][type="text"]`);
-                if (radio) userAnswer = radio.value;
-                else if (input) userAnswer = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
-                const correctAns = q.answer.toString().toLowerCase().replace(/\s+/g, ' ');
-                const isCorrect = userAnswer === correctAns;
-                if (isCorrect) correct++;
-
-                const item = document.createElement('div');
-                item.className = 'answer-item';
-                item.innerHTML = `<strong>Câu ${idx + 1}:</strong> ${q.text}<br>
-                                  <span class="${isCorrect ? 'correct' : 'incorrect'}">${isCorrect ? '✓ Đúng' : '✗ Sai'} - Đáp án đúng: <strong>${q.answer}</strong></span>`;
-                answersDiv.appendChild(item);
-            });
-
-            document.getElementById('totalScoreDisplay').textContent = `${correct}/${allQuestions.length}`;
-            document.getElementById('result').style.display = 'block';
-            document.getElementById('submitBtn').style.display = 'none';
+        userAns = selected.value;
+        isCorrect = userAns === q.answer;
+    } else {
+        const input = document.getElementById('challenge_fill');
+        if (!input || !input.value.trim()) {
+            alert('Vui lòng nhập đáp án!');
+            return;
         }
+        userAns = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+        const correct = q.answer.toLowerCase().replace(/\s+/g, ' ');
+        isCorrect = userAns === correct;
+    }
 
-        function retryExam() {
-            loadExam();
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('submitBtn').style.display = 'block';
-            window.scrollTo(0, 0);
+    const feedback = document.getElementById('challenge-feedback');
+
+    if (isCorrect) {
+        streak++;
+        document.getElementById('current-streak').textContent = streak;
+        feedback.innerHTML = `<strong class="text-3xl">ĐÚNG RỒI 🎉</strong>`;
+        feedback.className = 'feedback correct show';
+        document.getElementById('next-question').classList.remove('hidden');
+    } else {
+        feedback.innerHTML = `
+            <strong class="text-3xl">SAI 😞</strong><br>
+            Đáp án đúng: <strong>${q.answer}</strong><br>
+            Làm lại từ đầu sau <span id="countdown" class="text-4xl font-bold text-red-500">10</span> giây
+        `;
+        feedback.className = 'feedback wrong show';
+
+        let t = 10;
+        const timer = setInterval(() => {
+            document.getElementById('countdown').textContent = --t;
+            if (t <= 0) {
+                clearInterval(timer);
+                location.reload();
+            }
+        }, 1000);
+    }
+
+    feedback.classList.remove('hidden');
+    document.getElementById('submit-current').classList.add('hidden');
+});
+
+       
+        document.getElementById('next-question').addEventListener('click', () => {
+            currentIndex++;
+            if (currentIndex >= allQuestions.length) {
+                document.getElementById('current-question').innerHTML = `<div class="text-4xl font-bold text-[var(--success-color)] mt-12">HOÀN THÀNH THỬ THÁCH! 🏆</div>
+                    <div class="text-3xl mt-8">Chuỗi đúng: ${streak} / ${allQuestions.length}</div>`;
+                document.getElementById('next-question').classList.add('hidden');
+            } else {
+                showChallengeQuestion();
+            }
+        });
+        document.getElementById('submit-exam').addEventListener('click', () => {
+    let correct = 0;
+
+    allQuestions.forEach((q, index) => {
+        if (q.type === 'mcq') {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            if (selected && selected.value === q.answer) {
+                correct++;
+            }
+        } else {
+            const input = document.querySelector(`input[name="q${index}"]`);
+            if (!input) return;
+            const user = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+            const ans = q.answer.toLowerCase().replace(/\s+/g, ' ');
+            if (user === ans) correct++;
         }
+    });
 
-        loadExam();
+    const score10 = Math.round((correct / allQuestions.length) * 10 * 100) / 100;
+
+    document.getElementById('exam-result-text').innerHTML =
+        `${correct} / ${allQuestions.length} câu đúng<br><span class="text-[var(--success-color)]">${score10} điểm</span>`;
+
+    document.getElementById('exam-result').classList.remove('hidden');
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+});
+
+        document.getElementById('mode-exam').addEventListener('click', startExamMode);
+        document.getElementById('mode-challenge').addEventListener('click', startChallengeMode);
+        document.getElementById('back-to-mode')?.addEventListener('click', () => location.reload());
     </script>
 </body>
 </html>
