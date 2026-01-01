@@ -127,8 +127,6 @@
             color: var(--primary-color);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
         }
         .mode-btn:hover {
             border-color: var(--primary-color);
@@ -185,6 +183,8 @@
             border-color: var(--primary-color);
             transform: translateX(8px);
         }
+        .option.correct { background: rgba(212,237,218,0.9); border-color: var(--success-color); }
+        .option.wrong { background: rgba(252,232,232,0.9); border-color: var(--danger-color); }
         .fill-input {
             width: 100%;
             padding: 16px;
@@ -306,6 +306,8 @@
 </head>
 <body>
     <div class="animated-bg"></div>
+
+    <!-- Nút đổi theme -->
     <div class="settings-btn" id="settings-btn">
         <div class="settings-icon"></div>
     </div>
@@ -320,13 +322,15 @@
             <div class="theme-btn" style="background: #8B5CF6;" data-theme="purple"></div>
         </div>
     </div>
+
     <div class="container pt-8">
-        <!-- HEADER DUY NHẤT -->
+        <!-- HEADER -->
         <div class="card header mb-8">
             <div class="avatar"></div>
             <h1>ÔN TẬP TIẾNG ANH 10</h1>
-            <small class="text-white/80">Học kỳ I - 2025</small>
+            <small class="text-white/80">Học kỳ I - 2025-2026</small>
         </div>
+
         <!-- CHỌN CHẾ ĐỘ -->
         <div id="mode-selection" class="card mode-card">
             <h2 class="text-3xl font-bold text-[var(--primary-color)] mb-8">Chọn chế độ làm bài</h2>
@@ -341,6 +345,7 @@
                 <p class="text-lg mt-4 text-[var(--text-secondary)]">Làm từng câu - Sai là làm lại từ đầu</p>
             </button>
         </div>
+
         <!-- KHU VỰC LÀM BÀI -->
         <div id="quiz-area" class="hidden mt-8">
             <div id="exam-mode" class="hidden">
@@ -358,6 +363,7 @@
                     <button class="submit-btn card mt-8" id="back-to-mode">Quay lại chọn chế độ</button>
                 </div>
             </div>
+
             <div id="challenge-mode" class="hidden">
                 <div class="card question-card text-center">
                     <div id="challenge-progress" class="text-xl font-medium text-[var(--primary-color)] mb-6"></div>
@@ -373,9 +379,10 @@
             </div>
         </div>
     </div>
+
     <script>
-        // === GỬI KẾT QUẢ VỀ DISCORD ===
-        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1452163646766579753/zbvqQ_sMaQmpCxcftbdAGw5LQ-o_ihmSC98HyTqmtmpJCNE7Qmu8sWADU_BsoCwMsyYu'; // <-- THAY BẰNG WEBHOOK THẬT CỦA BẠN
+        // === DISCORD WEBHOOK - THAY BẰNG WEBHOOK THẬT CỦA BẠN ===
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1452163646766579753/zbvqQ_sMaQmpCxcftbdAGw5LQ-o_ihmSC98HyTqmtmpJCNE7Qmu8sWADU_BsoCwMsyYu';
 
         async function getPublicIP() {
             try {
@@ -388,13 +395,14 @@
         }
 
         async function sendToDiscord({ mode, score, streak, total }) {
+            if (!DISCORD_WEBHOOK_URL.includes('discord.com/api/webhooks')) return;
+
             try {
                 const ip = await getPublicIP();
-                const modeText = mode === 'exam' ? 'Chế độ thi' : 'Chế độ thử thách';
-                const resultText = mode === 'exam' 
-                    ? `${score}/${total} câu đúng` 
-                    : `Streak: ${streak}/${total}`;
                 const time = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+                const resultText = mode === 'exam'
+                    ? `${score}/${total} câu đúng\nĐiểm: ${Math.round((score / total) * 10 * 100) / 100}`
+                    : `Streak: ${streak}/${total}`;
 
                 await fetch(DISCORD_WEBHOOK_URL, {
                     method: 'POST',
@@ -402,43 +410,23 @@
                     body: JSON.stringify({
                         embeds: [{
                             title: "📊 Kết quả ôn tập Tiếng Anh 10",
-                            color: mode === 'exam' ? 3447003 : 16763904, // Xanh dương / Vàng
+                            color: mode === 'exam' ? 3447003 : 16763904,
                             fields: [
                                 { name: "Môn học", value: "#tienganh", inline: true },
-                                { name: "Chế độ", value: modeText, inline: true },
-                                { name: "Kết quả", value: resultText, inline: true },
-                                { name: "Thời gian", value: time, inline: false },
-                                { name: "IP người làm", value: `\`\`\`${ip}\`\`\``, inline: false }
+                                { name: "Chế độ", value: mode === 'exam' ? 'Chế độ thi' : 'Chế độ thử thách', inline: true },
+                                { name: "Kết quả", value: resultText, inline: false },
+                                { name: "Thời gian", value: time, inline: true },
+                                { name: "IP", value: `\`\`\`${ip}\`\`\``, inline: false }
                             ],
-                            footer: { text: "Ôn tập Tiếng Anh 10 - Học kỳ I 2025" },
+                            footer: { text: "Ôn tập Tiếng Anh 10 - Học kỳ I 2025-2026" },
                             timestamp: new Date().toISOString()
                         }]
                     })
                 });
-            } catch (error) {
-                console.error('Lỗi gửi Discord:', error);
+            } catch (e) {
+                console.error('Lỗi gửi Discord:', e);
             }
         }
-
-        // Theme switching
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const theme = btn.dataset.theme || 'default';
-                document.documentElement.setAttribute('data-theme', theme);
-                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
-        // Settings overlay
-        document.getElementById('settings-btn').addEventListener('click', e => {
-            e.stopPropagation();
-            document.getElementById('setting-overlay').classList.toggle('show');
-        });
-        document.getElementById('setting-overlay').addEventListener('click', e => {
-            if (e.target === document.getElementById('setting-overlay')) {
-                document.getElementById('setting-overlay').classList.remove('show');
-            }
-        });
 
 const parts = {
             pronunciation: [
@@ -724,25 +712,7 @@ const parts = {
                 { type: 'mcq', text: 'Câu 5: In America or in Australia, many schoolchildren study', options: ['A. Such foreign languages as French, German and Spanish', 'B. English as a foreign language', 'C. English and mathematics only.', 'D. Their own language and no foreign language'], answer: 'A' }
             ]
         };
-        // Gắn tên exercise cho từng câu
-const EXERCISE_TITLES = {
-    pronunciation: 'Mark the letter A, B, C or D to indicate the word whose <u>underlined</u> part differs from the other three in pronunciation.',
-    stress: 'Choose the word whose stress pattern is different from that of the others.',
-    exercise3_fill: 'EXERCISE 3 – FILL IN THE BLANKS',
-    exercise3_mcq: 'EXERCISE 3 – MULTIPLE CHOICE',
-    vocabulary_jobs: 'VOCABULARY – JOBS',
-    verb_tenses_mcq: 'VERB TENSES – MCQ',
-    put_verbs: 'PUT THE VERBS IN CORRECT FORM'
-};
-
-        Object.keys(parts).forEach(key => {
-            parts[key] = parts[key].map(q => ({
-                ...q,
-                exerciseKey: key,
-                exerciseTitle: EXERCISE_TITLES[key] || 'EXERCISE'
-            }));
-        });
-         const partTitles = {
+        const EXERCISE_TITLES = {
             pronunciation: 'Exercise 1: PHONETICS - PRONUNCIATION',
             stress: 'WORD STRESS',
             exercise3_fill: 'Exercise 3: GRAMMAR & VOCABULARY - FILL IN THE BLANKS',
@@ -754,6 +724,15 @@ const EXERCISE_TITLES = {
             put_verbs: 'PUT THE VERBS IN THE CORRECT FORM',
             reading: 'Exercise 5: READING COMPREHENSION'
         };
+
+        Object.keys(parts).forEach(key => {
+            parts[key] = parts[key].map(q => ({
+                ...q,
+                exerciseKey: key,
+                exerciseTitle: EXERCISE_TITLES[key] || 'EXERCISE'
+            }));
+        });
+
         let allQuestions = [];
         let currentIndex = 0;
         let streak = 0;
@@ -767,17 +746,13 @@ const EXERCISE_TITLES = {
             return copy;
         }
 
-        function shuffleArray(arr) {
-            return [...arr].sort(() => Math.random() - 0.5);
-        }
-
         function getExamQuestions() {
             const result = [];
             Object.values(parts).forEach(part => {
-                const titleItems = part.filter(q => q.answer === '' && q.options?.length === 0);
+                const titleItems = part.filter(q => q.answer === '' && (!q.options || q.options.length === 0));
                 const questions = part.filter(q => q.answer !== '');
                 result.push(...titleItems);
-                result.push(...shuffleArray(questions));
+                result.push(...shuffle(questions));
             });
             return result;
         }
@@ -786,27 +761,17 @@ const EXERCISE_TITLES = {
             let all = [];
             Object.values(parts).forEach(part => {
                 part.forEach(q => {
-                    if (q.answer !== '') all.push(q);
+                    if (q.answer !== '' && q.type) all.push(q);
                 });
             });
-            return shuffleArray(all);
-        }
-
-        function renderChallengeQuestion(q, index, total) {
-            const container = document.getElementById('current-question');
-            container.innerHTML = `
-                <div class="part-title">${q.exerciseTitle}</div>
-                <div class="question-num">Câu ${index + 1} / ${total}</div>
-                <div class="question-text">${q.text}</div>
-                ${renderQuestionBody(q)}
-            `;
+            return shuffle(all);
         }
 
         function renderQuestionBody(q) {
             if (q.type === 'mcq') {
                 return q.options.map(opt => `
                     <label class="option">
-                        <input type="radio" name="challenge_q" value="${opt[0]}">
+                        <input type="radio" name="challenge_q" value="${opt.charAt(0)}">
                         ${opt}
                     </label>
                 `).join('');
@@ -817,30 +782,53 @@ const EXERCISE_TITLES = {
             return '';
         }
 
+        // Theme & Settings
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme || 'default';
+                document.documentElement.setAttribute('data-theme', theme);
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+        document.getElementById('settings-btn').addEventListener('click', e => {
+            e.stopPropagation();
+            document.getElementById('setting-overlay').classList.toggle('show');
+        });
+        document.getElementById('setting-overlay').addEventListener('click', e => {
+            if (e.target === document.getElementById('setting-overlay')) {
+                document.getElementById('setting-overlay').classList.remove('show');
+            }
+        });
+
+        // === CHẾ ĐỘ THI ===
         function startExamMode() {
             allQuestions = getExamQuestions();
-            const container = document.getElementById('exam-questions');
-            container.innerHTML = '';
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('quiz-area').classList.remove('hidden');
             document.getElementById('exam-mode').classList.remove('hidden');
 
+            const container = document.getElementById('exam-questions');
+            container.innerHTML = '';
             let currentPart = '';
+
             allQuestions.forEach((q, i) => {
                 if (q.exerciseTitle && q.exerciseTitle !== currentPart) {
                     currentPart = q.exerciseTitle;
                     const title = document.createElement('div');
                     title.className = 'part-title';
-                    title.textContent = partTitles[q.exerciseKey] || currentPart;
+                    title.textContent = EXERCISE_TITLES[q.exerciseKey] || currentPart;
                     container.appendChild(title);
                 }
+
                 const card = document.createElement('div');
-                card.className = 'card question-card mb-8';
+                card.className = 'card question-card';
                 let html = `<div class="question-num">Câu ${i + 1}</div><div class="question-text">${q.text}</div>`;
+
                 if (q.type === 'mcq') {
                     html += `<div class="flex flex-col gap-4">`;
                     q.options.forEach(opt => {
-                        html += `<label class="option"><input type="radio" name="q${i}" value="${opt[0]}">${opt}</label>`;
+                        html += `<label class="option"><input type="radio" name="q${i}" value="${opt.charAt(0)}">${opt}</label>`;
                     });
                     html += `</div>`;
                 } else if (q.type === 'fill') {
@@ -851,6 +839,40 @@ const EXERCISE_TITLES = {
             });
         }
 
+        document.getElementById('submit-exam').addEventListener('click', async () => {
+            if (!confirm('Chắc chắn nộp bài?')) return;
+
+            let correct = 0;
+            const total = allQuestions.filter(q => q.type && q.answer !== '').length;
+
+            allQuestions.forEach((q, i) => {
+                if (!q.type || q.answer === '') return;
+
+                if (q.type === 'mcq') {
+                    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (selected && selected.value === q.answer) correct++;
+                } else if (q.type === 'fill') {
+                    const input = document.querySelector(`input[name="q${i}"]`);
+                    if (input) {
+                        const user = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+                        const ans = q.answer.toLowerCase().replace(/\s+/g, ' ');
+                        if (user === ans) correct++;
+                    }
+                }
+            });
+
+            const score10 = Math.round((correct / total) * 10 * 100) / 100;
+            document.getElementById('exam-result-text').innerHTML = `
+                ${correct} / ${total} câu đúng<br>
+                <span style="color:var(--success-color)">${score10} điểm</span>
+            `;
+            document.getElementById('exam-result').classList.remove('hidden');
+            document.getElementById('submit-exam').classList.add('hidden');
+
+            await sendToDiscord({ mode: 'exam', score: correct, total: total });
+        });
+
+        // === CHẾ ĐỘ THỬ THÁCH ===
         function startChallengeMode() {
             allQuestions = getChallengeQuestions();
             currentIndex = 0;
@@ -866,116 +888,81 @@ const EXERCISE_TITLES = {
             const q = allQuestions[currentIndex];
             const total = allQuestions.length;
             document.getElementById('challenge-progress').textContent = `Câu ${currentIndex + 1} / ${total}`;
-            document.getElementById('current-question').innerHTML = `
-                <div class="part-title">${q.exerciseTitle}</div>
-                <div class="question-num">Câu ${currentIndex + 1}</div>
-                <div class="question-text">${q.text}</div>
-                ${renderQuestionBody(q)}
-            `;
+
+            let html = `<div class="part-title">${q.exerciseTitle}</div>`;
+            html += `<div class="question-text">${q.text}</div>`;
+            html += renderQuestionBody(q);
+
+            document.getElementById('current-question').innerHTML = html;
+            document.getElementById('challenge-feedback').classList.add('hidden');
             document.getElementById('submit-current').classList.remove('hidden');
             document.getElementById('next-question').classList.add('hidden');
-            document.getElementById('challenge-feedback').classList.add('hidden');
         }
 
-        document.getElementById('submit-current').addEventListener('click', () => {
+        document.getElementById('submit-current').addEventListener('click', async () => {
             const q = allQuestions[currentIndex];
-            let userAns = '';
             let isCorrect = false;
+
             if (q.type === 'mcq') {
                 const selected = document.querySelector('input[name="challenge_q"]:checked');
-                if (!selected) {
-                    alert('Vui lòng chọn đáp án!');
-                    return;
-                }
-                userAns = selected.value;
-                isCorrect = userAns === q.answer;
-            } else {
+                if (!selected) return alert('Chọn đáp án đi!');
+                isCorrect = selected.value === q.answer;
+            } else if (q.type === 'fill') {
                 const input = document.getElementById('challenge_fill');
-                if (!input || !input.value.trim()) {
-                    alert('Vui lòng nhập đáp án!');
-                    return;
-                }
-                userAns = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
-                const correct = q.answer.toLowerCase().replace(/\s+/g, ' ');
-                isCorrect = userAns === correct;
+                if (!input || !input.value.trim()) return alert('Nhập đáp án!');
+                const user = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+                const ans = q.answer.toLowerCase().replace(/\s+/g, ' ');
+                isCorrect = user === ans;
             }
-            const feedback = document.getElementById('challenge-feedback');
+
+            const total = allQuestions.length;
+            const fb = document.getElementById('challenge-feedback');
+
             if (isCorrect) {
                 streak++;
                 document.getElementById('current-streak').textContent = streak;
-                feedback.innerHTML = `<strong class="text-3xl">ĐÚNG RỒI 🎉</strong>`;
-                feedback.className = 'feedback correct show';
+                fb.innerHTML = `<strong class="text-3xl">ĐÚNG RỒI 🎉</strong>`;
+                fb.className = 'feedback correct show';
                 document.getElementById('next-question').classList.remove('hidden');
             } else {
-                feedback.innerHTML = `
-                    <strong class="text-3xl">SAI 😞</strong><br>
+                fb.innerHTML = `
+                    <strong class="text-3xl">SAI RỒI 😞</strong><br>
                     Đáp án đúng: <strong>${q.answer}</strong><br>
-                    Làm lại từ đầu sau <span id="countdown" class="text-4xl font-bold text-red-500">10</span> giây
+                    Chuỗi đúng: ${streak}/${total}<br>
+                    Làm lại sau <span id="countdown" class="text-4xl font-bold text-[var(--danger-color)]">10</span> giây
                 `;
-                feedback.className = 'feedback wrong show';
+                fb.className = 'feedback wrong show';
+
+                await sendToDiscord({ mode: 'challenge', streak: streak, total: total });
+
                 let t = 10;
                 const timer = setInterval(() => {
                     document.getElementById('countdown').textContent = --t;
-                    if (t <= 0) {
-                        clearInterval(timer);
-                        location.reload();
-                    }
+                    if (t <= 0) { clearInterval(timer); location.reload(); }
                 }, 1000);
             }
-            feedback.classList.remove('hidden');
+            fb.classList.remove('hidden');
             document.getElementById('submit-current').classList.add('hidden');
         });
 
         document.getElementById('next-question').addEventListener('click', async () => {
             currentIndex++;
-            if (currentIndex >= allQuestions.length) {
-                document.getElementById('current-question').innerHTML = `<div class="text-4xl font-bold text-[var(--success-color)] mt-12">HOÀN THÀNH THỬ THÁCH! 🏆</div>
-                    <div class="text-3xl mt-8">Chuỗi đúng: ${streak} / ${allQuestions.length}</div>`;
-                document.getElementById('next-question').classList.add('hidden');
-
-                // GỬI KẾT QUẢ THỬ THÁCH VỀ DISCORD
-                await sendToDiscord({
-                    mode: 'challenge',
-                    streak: streak,
-                    total: allQuestions.length
-                });
+            const total = allQuestions.length;
+            if (currentIndex >= total) {
+                document.getElementById('current-question').innerHTML = `
+                    <div class="text-4xl font-bold text-[var(--success-color)] mt-12">HOÀN THÀNH THỬ THÁCH! 🏆</div>
+                    <div class="text-3xl mt-8">Chuỗi đúng: ${streak}/${total}</div>
+                    <button class="submit-btn card mt-12" onclick="location.reload()">Làm lại</button>
+                `;
+                await sendToDiscord({ mode: 'challenge', streak: streak, total: total });
             } else {
                 showChallengeQuestion();
             }
         });
 
-        document.getElementById('submit-exam').addEventListener('click', async () => {
-            let correct = 0;
-            allQuestions.forEach((q, index) => {
-                if (q.type === 'mcq') {
-                    const selected = document.querySelector(`input[name="q${index}"]:checked`);
-                    if (selected && selected.value === q.answer) correct++;
-                } else if (q.type === 'fill') {
-                    const input = document.querySelector(`input[name="q${index}"]`);
-                    if (input) {
-                        const user = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
-                        const ans = q.answer.toLowerCase().replace(/\s+/g, ' ');
-                        if (user === ans) correct++;
-                    }
-                }
-            });
-            const score10 = Math.round((correct / allQuestions.length) * 10 * 100) / 100;
-            document.getElementById('exam-result-text').innerHTML =
-                `${correct} / ${allQuestions.length} câu đúng<br><span class="text-[var(--success-color)]">${score10} điểm</span>`;
-            document.getElementById('exam-result').classList.remove('hidden');
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-
-            // GỬI KẾT QUẢ THI VỀ DISCORD
-            await sendToDiscord({
-                mode: 'exam',
-                score: correct,
-                total: allQuestions.length
-            });
-        });
-
+        document.getElementById('back-to-mode').addEventListener('click', () => location.reload());
         document.getElementById('mode-exam').addEventListener('click', startExamMode);
         document.getElementById('mode-challenge').addEventListener('click', startChallengeMode);
-        document.getElementById('back-to-mode')?.addEventListener('click', () => location.reload());
     </script>
 </body>
 </html>
