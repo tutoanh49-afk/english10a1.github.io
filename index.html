@@ -240,7 +240,6 @@
             line-height: 1.8;
         }
         .note * { color: white !important; }
-        /* Tips card giờ dùng màu theo theme */
         .tips-card {
             background: linear-gradient(135deg, var(--primary-color), rgba(0,0,0,0.2));
             color: white;
@@ -277,7 +276,6 @@
             left: 0;
             font-size: 20px;
         }
-        /* Nút bắt đầu dùng màu primary theo theme */
         .start-btn {
             width: 100%;
             padding: 18px;
@@ -358,36 +356,6 @@
             font-weight: 600;
             text-align: center;
         }
-        .sub-mode-card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        .sub-mode-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .sub-mode-options {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        .sub-mode-option {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
-        }
-        .sub-mode-option input {
-            margin-right: 12px;
-            transform: scale(1.3);
-            accent-color: var(--primary-color);
-        }
         @media (max-width: 768px) {
             .header h1 { font-size: 2.2rem; }
             .header .avatar { width: 80px; height: 80px; }
@@ -402,14 +370,11 @@
             .tips-card li { font-size: 16px; padding-left: 32px; }
             .tips-card li::before { font-size: 18px; }
             .settings-btn { width: 50px; height: 50px; top: 10px; right: 10px; }
-            .sub-mode-card { padding: 20px; }
-            .sub-mode-title { font-size: 18px; }
         }
     </style>
 </head>
 <body>
     <div class="animated-bg"></div>
-
     <div class="settings-btn" id="settings-btn">
         <div class="settings-icon"></div>
     </div>
@@ -424,15 +389,12 @@
             <div class="theme-btn" style="background: #8B5CF6;" data-theme="purple"></div>
         </div>
     </div>
-
     <div class="container pt-8">
         <div class="card header mb-8">
             <div class="avatar"></div>
             <h1>ÔN TẬP TIẾNG ANH 10</h1>
             <small class="text-white/80">Học kỳ I - 2025-2026</small>
         </div>
-
-        <!-- Tips card đẹp, chữ trắng, màu theo theme -->
         <div class="card tips-card">
             <h3>💡 MẸO LÀM BÀI HIỆU QUẢ</h3>
             <ul>
@@ -440,49 +402,24 @@
                 <li>Phần phát âm: Chú ý kỹ phần <u>gạch chân</u></li>
                 <li>Phần điền từ: Không phân biệt hoa/thường, bỏ qua khoảng trắng thừa</li>
                 <li>Không dùng dạng viết tắt → phải viết đầy đủ</li>
-                <li>Chế độ thi & thử thách đều có tùy chọn 80 câu random hoặc Full bộ</li>
+                <li><strong>Bộ đề được chia làm 2 giai đoạn. Sau khi hoàn thành giai đoạn 1 sẽ có nút để sang giai đoạn 2.</strong></li>
                 <li>Làm thử thách để ghi nhớ lâu hơn – sai là phải làm lại từ đầu!</li>
             </ul>
         </div>
-
         <div id="mode-selection" class="card mode-card">
             <h2 class="text-3xl font-bold text-[var(--primary-color)] mb-8">Chọn chế độ làm bài</h2>
             <div class="keyboard-hint">Nhấn phím 1-4 để chọn đáp án, Enter để nộp/qua câu</div>
-
             <button class="mode-btn" id="select-exam">
                 <div class="text-4xl mb-4">📝</div>
                 Chế độ thi
                 <p class="text-lg mt-4 text-[var(--text-secondary)]">Làm bài trắc nghiệm đầy đủ, nộp bài chấm điểm</p>
             </button>
-
             <button class="mode-btn" id="select-challenge">
                 <div class="text-4xl mb-4">⚔️</div>
                 Chế độ thử thách
                 <p class="text-lg mt-4 text-[var(--text-secondary)]">Làm từng câu – Sai là làm lại từ đầu</p>
             </button>
         </div>
-
-        <div id="sub-mode-selection" class="hidden card mode-card">
-            <h2 class="text-3xl font-bold text-[var(--primary-color)] mb-8" id="sub-mode-title"></h2>
-
-            <div class="sub-mode-card">
-                <div class="sub-mode-title">Chọn số lượng câu hỏi</div>
-                <div class="sub-mode-options">
-                    <label class="sub-mode-option">
-                        <input type="radio" name="question-count" value="random" checked>
-                        80 câu ngẫu nhiên (luyện nhanh)
-                    </label>
-                    <label class="sub-mode-option">
-                        <input type="radio" name="question-count" value="full">
-                        Làm full toàn bộ (~255 câu)
-                    </label>
-                </div>
-                <button class="start-btn" id="start-quiz">BẮT ĐẦU LÀM BÀI</button>
-            </div>
-
-            <button class="submit-btn card mt-8" id="back-to-main">← Quay lại chọn chế độ</button>
-        </div>
-
         <div id="quiz-area" class="hidden mt-8">
             <div id="exam-mode" class="hidden">
                 <div class="note card mb-8">
@@ -494,12 +431,12 @@
                 <div id="exam-questions"></div>
                 <button class="submit-btn card" id="submit-exam">NỘP BÀI & CHẤM ĐIỂM</button>
                 <div id="exam-result" class="hidden card mt-8 text-center py-12">
-                    <h2 class="text-3xl font-bold text-[var(--primary-color)] mb-6">KẾT QUẢ</h2>
+                    <h2 class="text-3xl font-bold text-[var(--primary-color)] mb-6">KẾT QUẢ GIAI ĐOẠN 1</h2>
                     <div id="exam-result-text" class="text-5xl font-bold mb-8"></div>
-                    <button class="submit-btn card mt-8" id="back-to-mode">Quay lại chọn chế độ</button>
+                    <button class="submit-btn card mt-8" id="start-phase2-exam">BẮT ĐẦU GIAI ĐOẠN 2</button>
+                    <button class="submit-btn card mt-4 bg-gray-600 hover:bg-gray-700" id="back-to-mode">Quay lại chọn chế độ</button>
                 </div>
             </div>
-
             <div id="challenge-mode" class="hidden">
                 <div class="card question-card text-center">
                     <div id="challenge-progress" class="text-xl font-medium text-[var(--primary-color)] mb-6"></div>
@@ -511,6 +448,12 @@
                     <button class="submit-btn hidden" id="submit-current">NỘP CÂU NÀY</button>
                     <button class="submit-btn hidden" id="next-question">CÂU TIẾP THEO</button>
                     <div id="challenge-feedback" class="feedback hidden"></div>
+                    <div id="challenge-phase1-complete" class="hidden text-center mt-12">
+                        <h3 class="text-4xl font-bold text-[var(--success-color)] mb-8">HOÀN THÀNH GIAI ĐOẠN 1! 🎉</h3>
+                        <p class="text-2xl mb-8">Chuỗi đúng hiện tại: <strong id="final-streak-phase1">0</strong></p>
+                        <button class="submit-btn card" id="start-phase2-challenge">BẮT ĐẦU GIAI ĐOẠN 2</button>
+                        <button class="submit-btn card mt-4 bg-gray-600 hover:bg-gray-700" onclick="location.reload()">Làm lại từ đầu</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -518,7 +461,6 @@
 
     <script>
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1452163646766579753/zbvqQ_sMaQmpCxcftbdAGw5LQ-o_ihmSC98HyTqmtmpJCNE7Qmu8sWADU_BsoCwMsyYu';
-
         async function getPublicIP() {
             try {
                 const res = await fetch('https://api.ipify.org?format=json');
@@ -528,7 +470,6 @@
                 return 'Không lấy được IP';
             }
         }
-
         async function sendToDiscord({ mode, score, streak, total }) {
             if (!DISCORD_WEBHOOK_URL.includes('discord.com/api/webhooks')) return;
             try {
@@ -560,7 +501,8 @@
                 console.error('Lỗi gửi Discord:', e);
             }
         }
-const parts = {
+
+       const parts = {
             pronunciation: [
                 { type: 'mcq', text: 'Exercise 1: Mark the letter A, B, C or D to indicate the word whose <u>underlined</u> part differs from the other three in pronunciation.', options: ['A. <u>ch</u>aracteristic', 'B. <u>Ch</u>ristmas', 'C. <u>ch</u>allenge', 'D. <u>ch</u>emical'], answer: 'B' },
                 { type: 'mcq', text: '2.', options: ['A. mu<u>s</u>eum', 'B. di<u>s</u>appointed', 'C. mu<u>s</u>cal', 'D. amu<u>s</u>ing'], answer: 'B' },
@@ -856,13 +798,15 @@ const parts = {
             put_verbs: 'PUT THE VERBS IN THE CORRECT FORM',
             reading: 'Exercise 5: READING COMPREHENSION'
         };
-        let allQuestions = [];
+        let allRealQuestions = [];
+        let currentQuestions = [];
         let currentIndex = 0;
         let streak = 0;
-        let examQuestions = [];
         let currentMainMode = '';
-        let currentSubMode = 'random';
         let currentModeText = '';
+        let isPhase2 = false;
+        let totalQuestions = 0;
+        let halfPoint = 0;
 
         function shuffle(array) {
             const copy = [...array];
@@ -877,16 +821,30 @@ const parts = {
             let all = [];
             Object.values(parts).forEach(part => {
                 part.forEach(q => {
-                    if (q.answer !== '' && q.type) all.push(q);
+                    if (q.answer !== '' && q.type) all.push({ ...q });
                 });
             });
             return all;
         }
 
-        function getQuestions(isRandom) {
-            const allReal = getAllRealQuestions();
-            const shuffled = shuffle(allReal);
-            return isRandom ? shuffled.slice(0, 80) : shuffled;
+        function prepareQuestions() {
+            allRealQuestions = getAllRealQuestions();
+            totalQuestions = allRealQuestions.length;
+            halfPoint = Math.ceil(totalQuestions / 2);
+
+            const shuffled = shuffle(allRealQuestions);
+            currentQuestions = shuffled;
+        }
+
+        function addExerciseTitle() {
+            currentQuestions.forEach(q => {
+                for (const [key, value] of Object.entries(parts)) {
+                    if (value.some(pq => pq.text === q.text && pq.answer === q.answer)) {
+                        q.exerciseTitle = EXERCISE_TITLES[key] || '';
+                        break;
+                    }
+                }
+            });
         }
 
         function renderQuestionBody(q) {
@@ -904,6 +862,7 @@ const parts = {
             return '';
         }
 
+        // Theme & settings
         document.querySelectorAll('.theme-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const theme = btn.dataset.theme || 'default';
@@ -924,55 +883,40 @@ const parts = {
             }
         });
 
+        // Chọn chế độ
         document.getElementById('select-exam').addEventListener('click', () => {
             currentMainMode = 'exam';
-            document.getElementById('sub-mode-title').textContent = 'Chế độ thi – Chọn số lượng câu';
+            currentModeText = 'Chế độ thi - Full bộ đề (2 giai đoạn)';
             document.getElementById('mode-selection').classList.add('hidden');
-            document.getElementById('sub-mode-selection').classList.remove('hidden');
+            document.getElementById('quiz-area').classList.remove('hidden');
+            document.getElementById('exam-mode').classList.remove('hidden');
+            startExamMode();
         });
 
         document.getElementById('select-challenge').addEventListener('click', () => {
             currentMainMode = 'challenge';
-            document.getElementById('sub-mode-title').textContent = 'Chế độ thử thách – Chọn số lượng câu';
+            currentModeText = 'Chế độ thử thách - Full bộ đề (2 giai đoạn)';
             document.getElementById('mode-selection').classList.add('hidden');
-            document.getElementById('sub-mode-selection').classList.remove('hidden');
-        });
-
-        document.getElementById('back-to-main').addEventListener('click', () => {
-            document.getElementById('sub-mode-selection').classList.add('hidden');
-            document.getElementById('mode-selection').classList.remove('hidden');
-        });
-
-        document.getElementById('start-quiz').addEventListener('click', () => {
-            currentSubMode = document.querySelector('input[name="question-count"]:checked').value;
-            const isRandom = currentSubMode === 'random';
-            const countText = isRandom ? '80 câu random' : 'Full (~255 câu)';
-            currentModeText = currentMainMode === 'exam' 
-                ? `Chế độ thi - ${countText}` 
-                : `Chế độ thử thách - ${countText}`;
-
-            allQuestions = getQuestions(isRandom);
-            examQuestions = allQuestions;
-
-            if (currentMainMode === 'exam') {
-                startExamMode();
-            } else {
-                startChallengeMode();
-            }
-        });
-
-        function startExamMode() {
-            if (examQuestions.length === 0) return alert('Lỗi tải câu hỏi!');
-            document.getElementById('sub-mode-selection').classList.add('hidden');
             document.getElementById('quiz-area').classList.remove('hidden');
-            document.getElementById('exam-mode').classList.remove('hidden');
+            document.getElementById('challenge-mode').classList.remove('hidden');
+            startChallengeMode();
+        });
+
+        // === CHẾ ĐỘ THI ===
+        function startExamMode() {
+            if (isPhase2) return; // đã xử lý ở nút sang phase 2
+            prepareQuestions();
+            addExerciseTitle();
+
+            const questionsToShow = currentQuestions.slice(0, halfPoint);
             const container = document.getElementById('exam-questions');
             container.innerHTML = '';
-            examQuestions.forEach((q, i) => {
+
+            questionsToShow.forEach((q, i) => {
                 const card = document.createElement('div');
                 card.className = 'card question-card';
                 let html = `<div class="question-num">Câu ${i + 1}</div>
-                            <div class="part-title text-lg">${q.exerciseTitle}</div>
+                            <div class="part-title text-lg">${q.exerciseTitle || ''}</div>
                             <div class="question-text">${q.text}</div>`;
                 if (q.type === 'mcq') {
                     html += `<div class="flex flex-col gap-4">`;
@@ -989,10 +933,12 @@ const parts = {
         }
 
         document.getElementById('submit-exam').addEventListener('click', async () => {
-            if (!confirm('Chắc chắn nộp bài?')) return;
+            if (!confirm('Chắc chắn nộp bài giai đoạn 1?')) return;
+
+            const questionsToCheck = currentQuestions.slice(0, halfPoint);
             let correct = 0;
-            const total = examQuestions.length;
-            examQuestions.forEach((q, i) => {
+
+            questionsToCheck.forEach((q, i) => {
                 if (q.type === 'mcq') {
                     const selected = document.querySelector(`input[name="q${i}"]:checked`);
                     if (selected && selected.value === q.answer) correct++;
@@ -1005,80 +951,103 @@ const parts = {
                     }
                 }
             });
-            const score10 = Math.round((correct / total) * 10 * 100) / 100;
+
+            const score10 = Math.round((correct / halfPoint) * 10 * 100) / 100;
             document.getElementById('exam-result-text').innerHTML = `
-                ${correct} / ${total} câu đúng<br>
+                ${correct} / ${halfPoint} câu đúng<br>
                 <span style="color:var(--success-color)">${score10} điểm</span>
             `;
             document.getElementById('exam-result').classList.remove('hidden');
             document.getElementById('submit-exam').classList.add('hidden');
-            await sendToDiscord({ mode: currentModeText, score: correct, total: total });
         });
 
+        document.getElementById('start-phase2-exam').addEventListener('click', () => {
+            isPhase2 = true;
+            document.getElementById('exam-result').classList.add('hidden');
+            document.getElementById('exam-questions').innerHTML = '';
+            document.getElementById('submit-exam').classList.remove('hidden');
+            document.getElementById('submit-exam').textContent = 'NỘP BÀI & HOÀN THÀNH';
+
+            const questionsToShow = currentQuestions.slice(halfPoint);
+            const container = document.getElementById('exam-questions');
+
+            questionsToShow.forEach((q, i) => {
+                const card = document.createElement('div');
+                card.className = 'card question-card';
+                let html = `<div class="question-num">Câu ${halfPoint + i + 1}</div>
+                            <div class="part-title text-lg">${q.exerciseTitle || ''}</div>
+                            <div class="question-text">${q.text}</div>`;
+                if (q.type === 'mcq') {
+                    html += `<div class="flex flex-col gap-4">`;
+                    q.options.forEach(opt => {
+                        html += `<label class="option"><input type="radio" name="q${i}" value="${opt.charAt(0)}">${opt}</label>`;
+                    });
+                    html += `</div>`;
+                } else if (q.type === 'fill') {
+                    html += `<input type="text" class="fill-input" name="q${i}" placeholder="Nhập đáp án...">`;
+                }
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
+        });
+
+        // Khi nộp giai đoạn 2 (nút vẫn là submit-exam nhưng text đã đổi)
+        document.getElementById('submit-exam').addEventListener('click', async function finalSubmit() {
+            if (isPhase2 && confirm('Chắc chắn nộp bài và hoàn thành toàn bộ?')) {
+                const questionsToCheck = currentQuestions.slice(halfPoint);
+                let correct = 0;
+                questionsToCheck.forEach((q, i) => {
+                    if (q.type === 'mcq') {
+                        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                        if (selected && selected.value === q.answer) correct++;
+                    } else if (q.type === 'fill') {
+                        const input = document.querySelector(`input[name="q${i}"]`);
+                        if (input) {
+                            const user = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+                            const ans = q.answer.toLowerCase().replace(/\s+/g, ' ');
+                            if (user === ans) correct++;
+                        }
+                    }
+                });
+                const score10 = Math.round((correct / (totalQuestions - halfPoint)) * 10 * 100) / 100;
+                document.getElementById('exam-result-text').innerHTML = `
+                    HOÀN THÀNH TOÀN BỘ!<br>
+                    Giai đoạn 2: ${correct} / ${totalQuestions - halfPoint} câu đúng<br>
+                    <span style="color:var(--success-color)">${score10} điểm (giai đoạn 2)</span>
+                `;
+                document.getElementById('exam-result').classList.remove('hidden');
+                document.getElementById('submit-exam').classList.add('hidden');
+                await sendToDiscord({ mode: currentModeText + ' - Giai đoạn 2', score: correct, total: totalQuestions - halfPoint });
+            }
+        });
+
+        // === CHẾ ĐỘ THỬ THÁCH ===
         function startChallengeMode() {
-            if (allQuestions.length === 0) return alert('Lỗi tải câu hỏi!');
+            prepareQuestions();
+            addExerciseTitle();
             currentIndex = 0;
             streak = 0;
             document.getElementById('current-streak').textContent = '0';
-            document.getElementById('sub-mode-selection').classList.add('hidden');
-            document.getElementById('quiz-area').classList.remove('hidden');
-            document.getElementById('challenge-mode').classList.remove('hidden');
+            document.getElementById('challenge-phase1-complete').classList.add('hidden');
             showChallengeQuestion();
         }
 
         function showChallengeQuestion() {
-            const q = allQuestions[currentIndex];
-            const total = allQuestions.length;
-            document.getElementById('challenge-progress').textContent = `Câu ${currentIndex + 1} / ${total}`;
-            let html = `<div class="part-title">${q.exerciseTitle}</div>
+            const q = currentQuestions[currentIndex];
+            document.getElementById('challenge-progress').textContent = `Câu ${currentIndex + 1} / ${currentQuestions.length} (Giai đoạn ${isPhase2 ? 2 : 1})`;
+            let html = `<div class="part-title">${q.exerciseTitle || ''}</div>
                         <div class="question-text">${q.text}</div>
                         ${renderQuestionBody(q)}`;
             document.getElementById('current-question').innerHTML = html;
             document.getElementById('challenge-feedback').classList.add('hidden');
             document.getElementById('submit-current').classList.remove('hidden');
             document.getElementById('next-question').classList.add('hidden');
-
             const fillInput = document.getElementById('challenge_fill');
             if (fillInput) fillInput.focus();
         }
 
-        document.addEventListener('keydown', (e) => {
-            if (document.getElementById('quiz-area').classList.contains('hidden')) return;
-
-            if (['1','2','3','4'].includes(e.key)) {
-                e.preventDefault();
-                const keyMap = { '1': 'A', '2': 'B', '3': 'C', '4': 'D' };
-                const value = keyMap[e.key];
-
-                if (!document.getElementById('challenge-mode').classList.contains('hidden')) {
-                    const option = document.querySelector(`input[data-key="${e.key}"]`);
-                    if (option) option.checked = true;
-                } else {
-                    const radios = document.querySelectorAll(`input[type="radio"][value="${value}"]`);
-                    for (let r of radios) {
-                        if (!r.checked) {
-                            r.checked = true;
-                            r.scrollIntoView({behavior: "smooth", block: "center"});
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                if (!document.getElementById('challenge-mode').classList.contains('hidden')) {
-                    if (!document.getElementById('submit-current').classList.contains('hidden')) {
-                        document.getElementById('submit-current').click();
-                    } else if (!document.getElementById('next-question').classList.contains('hidden')) {
-                        document.getElementById('next-question').click();
-                    }
-                }
-            }
-        });
-
         document.getElementById('submit-current').addEventListener('click', async () => {
-            const q = allQuestions[currentIndex];
+            const q = currentQuestions[currentIndex];
             let isCorrect = false;
             if (q.type === 'mcq') {
                 const selected = document.querySelector('input[name="challenge_q"]:checked');
@@ -1091,7 +1060,7 @@ const parts = {
                 const ans = q.answer.toLowerCase().replace(/\s+/g, ' ');
                 isCorrect = user === ans;
             }
-            const total = allQuestions.length;
+
             const fb = document.getElementById('challenge-feedback');
             if (isCorrect) {
                 streak++;
@@ -1103,11 +1072,11 @@ const parts = {
                 fb.innerHTML = `
                     <strong class="text-3xl">SAI RỒI 😞</strong><br>
                     Đáp án đúng: <strong>${q.answer}</strong><br>
-                    Chuỗi đúng: ${streak}/${total}<br>
+                    Chuỗi đúng: ${streak}/${currentQuestions.length}<br>
                     Làm lại sau <span id="countdown" class="text-4xl font-bold text-[var(--danger-color)]">10</span> giây
                 `;
                 fb.className = 'feedback wrong show';
-                await sendToDiscord({ mode: currentModeText, streak: streak, total: total });
+                await sendToDiscord({ mode: currentModeText, streak: streak, total: currentQuestions.length });
                 let t = 10;
                 const timer = setInterval(() => {
                     document.getElementById('countdown').textContent = --t;
@@ -1118,18 +1087,67 @@ const parts = {
             document.getElementById('submit-current').classList.add('hidden');
         });
 
-        document.getElementById('next-question').addEventListener('click', async () => {
+        document.getElementById('next-question').addEventListener('click', () => {
             currentIndex++;
-            const total = allQuestions.length;
-            if (currentIndex >= total) {
+            if (!isPhase2 && currentIndex === halfPoint) {
+                document.getElementById('final-streak-phase1').textContent = streak;
+                document.getElementById('challenge-phase1-complete').classList.remove('hidden');
+                document.getElementById('current-question').classList.add('hidden');
+                document.getElementById('challenge-feedback').classList.add('hidden');
+                return;
+            }
+            if (currentIndex >= currentQuestions.length) {
                 document.getElementById('current-question').innerHTML = `
-                    <div class="text-4xl font-bold text-[var(--success-color)] mt-12">HOÀN THÀNH THỬ THÁCH! 🏆</div>
-                    <div class="text-3xl mt-8">Chuỗi đúng: ${streak}/${total}</div>
-                    <button class="submit-btn card mt-12" onclick="location.reload()">Làm lại</button>
+                    <div class="text-4xl font-bold text-[var(--success-color)] mt-12">HOÀN THÀNH TOÀN BỘ! 🏆</div>
+                    <div class="text-3xl mt-8">Chuỗi đúng cuối cùng: ${streak}/${currentQuestions.length}</div>
+                    <button class="submit-btn card mt-12" onclick="location.reload()">Làm lại từ đầu</button>
                 `;
-                await sendToDiscord({ mode: currentModeText, streak: streak, total: total });
+                sendToDiscord({ mode: currentModeText, streak: streak, total: currentQuestions.length });
             } else {
                 showChallengeQuestion();
+            }
+        });
+
+        document.getElementById('start-phase2-challenge').addEventListener('click', () => {
+            isPhase2 = true;
+            currentIndex = halfPoint;
+            streak = 0;
+            document.getElementById('current-streak').textContent = '0';
+            document.getElementById('challenge-phase1-complete').classList.add('hidden');
+            document.getElementById('current-question').classList.remove('hidden');
+            showChallengeQuestion();
+        });
+
+        // Phím tắt
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('quiz-area').classList.contains('hidden')) return;
+            if (['1','2','3','4'].includes(e.key)) {
+                e.preventDefault();
+                const keyMap = { '1': 'A', '2': 'B', '3': 'C', '4': 'D' };
+                const value = keyMap[e.key];
+                if (currentMainMode === 'challenge') {
+                    const option = document.querySelector(`input[data-key="${e.key}"]`);
+                    if (option) option.checked = true;
+                } else {
+                    const radios = document.querySelectorAll(`input[type="radio"][value="${value}"]`);
+                    for (let r of radios) {
+                        if (!r.closest('.question-card').querySelector('input[type="radio"]:checked')) {
+                            r.checked = true;
+                            r.scrollIntoView({behavior: "smooth", block: "center"});
+                            break;
+                        }
+                    }
+                }
+            }
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (currentMainMode === 'challenge') {
+                    if (!document.getElementById('submit-current').classList.contains('hidden')) {
+                        document.getElementById('submit-current').click();
+                    } else if (!document.getElementById('next-question').classList.contains('hidden')) {
+                        document.getElementById('next-question').click();
+                    }
+                }
             }
         });
 
